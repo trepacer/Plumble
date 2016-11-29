@@ -159,6 +159,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                         e.printStackTrace();
                     }
                 }
+                powerWake();
                 moveTaskToBack(true);
             }
         }).start();
@@ -311,16 +312,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (android.os.Build.VERSION.SDK_INT > 8) {
-            android.os.PowerManager pm = (android.os.PowerManager) getSystemService(Context.POWER_SERVICE);
-            boolean powerSaveMode = false;
-            powerSaveMode = pm.isScreenOn();
-            Log.getClassInfo("powerSaveMode: "+powerSaveMode);
-            if(!powerSaveMode){
-                // 10085467 唤醒屏幕
-                exeCmd("adb shell input keyevent 26;adb shell input keyevent 82");
-            }
-        }
+        powerWake();
         Log.getClassInfo("可用内存： "+getAvailMemory());
         mSettings = Settings.getInstance(this);
         setTheme(mSettings.getTheme());
@@ -421,6 +413,19 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                 AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC);
 
         if(mSettings.isFirstRun()) showSetupWizard();
+    }
+
+    private void powerWake() {
+        if (Build.VERSION.SDK_INT > 8) {
+            android.os.PowerManager pm = (android.os.PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean powerSaveMode = false;
+            powerSaveMode = pm.isScreenOn();
+            Log.getClassInfo("powerSaveMode: "+powerSaveMode);
+            if(!powerSaveMode){
+                // 10085467 唤醒屏幕
+                exeCmd("adb shell input keyevent 26;adb shell input keyevent 82");
+            }
+        }
     }
 
     @Override
