@@ -139,8 +139,6 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     /** List of fragments to be notified about service state changes. */
     private List<JumbleServiceFragment> mServiceFragments = new ArrayList<JumbleServiceFragment>();
-
-
     public static MediaPlayer mPlayer;
     public static String branchcd = null;
     public static String acountcd = null;
