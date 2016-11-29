@@ -1,0 +1,73 @@
+/*
+ * Copyright (C) 2014 Andrew Comminos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.3'
+    }
+}
+apply plugin: 'com.android.library'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.+'
+    compile 'com.google.protobuf:protobuf-java:2.5.0'
+    compile 'com.madgag.spongycastle:core:1.51.0.0'
+    // Custom PKCS12 keybag parse modifications to support Mumble unencrypted certificates
+    // Source: https://github.com/Morlunk/spongycastle/tree/pkcs12-keybag-fixes
+    compile files('libs/sc-morlunk-prov-1.51.0.0.jar')
+    compile files('libs/sc-morlunk-pkix-1.51.0.0.jar')
+    compile 'com.googlecode.javacpp:javacpp:0.7'
+    compile 'com.intellij:annotations:+@jar'
+    compile files('libs/volly-1.0.11.jar')
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
+
+    sourceSets.main.jniLibs.srcDir 'src/main/libs/'
+    sourceSets.main.jni.srcDirs = [] // Disable NDK build support until it supports multiple modules.
+
+    defaultConfig {
+        testApplicationId "com.morlunk.jumble.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        minSdkVersion 9
+        targetSdkVersion 19
+
+//        ndk {
+//            abiFilters "armeabi", "armeabi-v7a", "x86"
+//            stl "gnustl_static"
+//            cFlags "-I\$(LOCAL_PATH)/speex/include/ -I\$(LOCAL_PATH)/celt-0.11.0-src/include/ -I\$(LOCAL_PATH)/celt-0.7.0-src/include/ -I\$(LOCAL_PATH)/opus/include -D__EMX__ -DUSE_KISS_FFT -DFIXED_POINT -DEXPORT='' -DHAVE_CONFIG_H -fvisibility=hidden -DOPUS_BUILD -DVAR_ARRAYS -Wno-traditional -DFIXED_POINT"
+//        }
+    }
+
+    // Trigger NDK build on java compilation task.
+    task ndkBuild(type: Exec) {
+        commandLine 'C:\\10085467\\sdk\\sdk\\ndk-bundle\\ndk-build.cmd', '-C', file('src/main/jni/').absolutePath
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
+    }
+}

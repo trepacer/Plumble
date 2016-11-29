@@ -1,0 +1,91 @@
+/*
+ * Copyright (C) 2014 Andrew Comminos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.3'
+    }
+}
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile project(':libraries:Jumble')
+    compile 'com.android.support:support-v4:21.+'
+    compile 'com.android.support:appcompat-v7:21.+'
+    compile 'com.android.support:cardview-v7:21.+'
+    compile 'com.android.support:palette-v7:21.+'
+    compile 'com.android.support:recyclerview-v7:21.+'
+    compile 'org.jsoup:jsoup:1.7.2'
+    compile 'info.guardianproject.netcipher:netcipher:1.2'
+}
+
+
+// Keep my credentials private :^)
+def signingFile = file 'signing.gradle';
+if (signingFile.exists()) apply from: 'signing.gradle'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.1'
+
+    defaultConfig {
+        minSdkVersion 12
+        targetSdkVersion 21
+        applicationId "com.morlunk.mumbleclient"
+        versionCode 73
+        versionName "3.3.0-rc1"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        buildConfigField "boolean", "DONATE_NAG", "false"
+    }
+
+    productFlavors {
+
+        official {
+            applicationId "com.morlunk.mumbleclient"
+        }
+
+        free {
+            applicationId "com.morlunk.mumbleclient.free"
+            buildConfigField "boolean", "DONATE_NAG", "true"
+        }
+
+        jenkins {
+            // Abuse Jenkins environment variables. Neat.
+            def env = System.getenv()
+            if (env.containsKey("BUILD_NUMBER") && env.containsKey("BUILD_DISPLAY_NAME")) {
+                versionCode Integer.parseInt(env.get("BUILD_NUMBER"))
+                versionName env.get("BUILD_DISPLAY_NAME")
+            } else {
+                versionCode 0
+                versionName "Unknown Nightly"
+            }
+            applicationId "com.morlunk.mumbleclient.jenkins"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
