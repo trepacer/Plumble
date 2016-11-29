@@ -145,7 +145,6 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     public static String serverip = null;
     public static String moveTaskToBack = null;
     private PlumbleOverlay.MyBoardCast receiver;
-
     public void hideActivity(){
         new Thread(new Runnable() {
             @Override
@@ -203,7 +202,6 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
             supportInvalidateOptionsMenu();
             Log.getClassInfo("ConnectionState: onConnected");
             updateConnectionState(getService());
-
             //2. 隐藏界面
             Log.getClassInfo("moveTaskToBack");
 //            moveTaskToBack(true);
