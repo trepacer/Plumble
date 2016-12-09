@@ -28,6 +28,7 @@ import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.db.DatabaseCertificate;
 import com.morlunk.mumbleclient.db.PlumbleDatabase;
 import com.morlunk.mumbleclient.db.PlumbleSQLiteDatabase;
+import com.morlunk.mumbleclient.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,6 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
 
 /**
  * Created by andrew on 12/01/16.
@@ -50,6 +53,7 @@ public class CertificateExportActivity extends Activity implements DialogInterfa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         mDatabase = new PlumbleSQLiteDatabase(this);
         mCertificates = mDatabase.getCertificates();
@@ -73,17 +77,20 @@ public class CertificateExportActivity extends Activity implements DialogInterfa
 
     @Override
     protected void onDestroy() {
+        Log.getClassInfo("ConnectionState: onDisconnected");
         super.onDestroy();
         mDatabase.close();
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        getClassInfo();
         DatabaseCertificate certificate = mCertificates.get(which);
         saveCertificate(certificate);
     }
 
     private void saveCertificate(DatabaseCertificate certificate) {
+        getClassInfo();
         byte[] data = mDatabase.getCertificateData(certificate.getId());
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             showErrorDialog(R.string.externalStorageUnavailable);
@@ -114,6 +121,7 @@ public class CertificateExportActivity extends Activity implements DialogInterfa
     }
 
     private void showErrorDialog(int resourceId) {
+        getClassInfo();
         AlertDialog.Builder errorDialog = new AlertDialog.Builder(this);
         errorDialog.setMessage(resourceId);
         errorDialog.setPositiveButton(android.R.string.ok, null);

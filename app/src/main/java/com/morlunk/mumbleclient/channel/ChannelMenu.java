@@ -45,6 +45,8 @@ import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.channel.comment.ChannelDescriptionFragment;
 import com.morlunk.mumbleclient.db.PlumbleDatabase;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 22/11/15.
  */
@@ -66,6 +68,7 @@ public class ChannelMenu implements PermissionsPopupMenu.IOnMenuPrepareListener,
 
     @Override
     public void onMenuPrepare(Menu menu, int permissions) {
+        getClassInfo();
         // This breaks uMurmur ACL. Put in a fix based on server version perhaps?
         //menu.getMenu().findItem(R.id.menu_channel_add)
         // .setVisible((permissions & (Permissions.MakeChannel | Permissions.MakeTempChannel)) > 0);
@@ -85,6 +88,7 @@ public class ChannelMenu implements PermissionsPopupMenu.IOnMenuPrepareListener,
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        getClassInfo();
         boolean adding = false;
         switch(item.getItemId()) {
             case R.id.context_channel_join:
@@ -190,6 +194,7 @@ public class ChannelMenu implements PermissionsPopupMenu.IOnMenuPrepareListener,
     }
 
     public void showPopup(View anchor) {
+        getClassInfo();
         PermissionsPopupMenu popupMenu = new PermissionsPopupMenu(mContext, anchor,
                 R.menu.context_channel, this, this, mChannel, mService);
         popupMenu.show();

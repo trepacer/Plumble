@@ -40,6 +40,8 @@ import com.morlunk.mumbleclient.util.ModelUtils;
 
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 19/11/15.
  */
@@ -61,6 +63,7 @@ public class UserMenu implements PermissionsPopupMenu.IOnMenuPrepareListener, Po
 
     @Override
     public void onMenuPrepare(Menu menu, int permissions) {
+        getClassInfo();
         // Use permission data to determine the actions available.
         boolean self = mUser.getSession() == mService.getSession();
         int perms = mService.getPermissions();
@@ -107,6 +110,7 @@ public class UserMenu implements PermissionsPopupMenu.IOnMenuPrepareListener, Po
 
     @Override
     public boolean onMenuItemClick(final MenuItem menuItem) {
+        getClassInfo();
         switch (menuItem.getItemId()) {
             case R.id.context_ban:
             case R.id.context_kick:
@@ -175,6 +179,7 @@ public class UserMenu implements PermissionsPopupMenu.IOnMenuPrepareListener, Po
     }
 
     private void showUserComment(final boolean edit) {
+        getClassInfo();
         Bundle args = new Bundle();
         args.putInt("session", mUser.getSession());
         args.putString("comment", mUser.getComment());
@@ -184,6 +189,7 @@ public class UserMenu implements PermissionsPopupMenu.IOnMenuPrepareListener, Po
     }
 
     private void showChannelMoveDialog() {
+        getClassInfo();
         AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
         adb.setTitle(R.string.user_menu_move);
         final List<IChannel> channels = ModelUtils.getChannelList(mService.getRootChannel());
@@ -202,6 +208,7 @@ public class UserMenu implements PermissionsPopupMenu.IOnMenuPrepareListener, Po
     }
 
     public void showPopup(View anchor) {
+        getClassInfo();
         PermissionsPopupMenu popupMenu = new PermissionsPopupMenu(mContext, anchor,
                 R.menu.context_user, this, this, mUser.getChannel(), mService);
         popupMenu.show();

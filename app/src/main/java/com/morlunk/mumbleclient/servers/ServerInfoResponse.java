@@ -21,6 +21,8 @@ import com.morlunk.jumble.model.Server;
 
 import java.nio.ByteBuffer;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Response from server pings.
  * @see http://mumble.sourceforge.net/Protocol
@@ -47,6 +49,7 @@ public class ServerInfoResponse {
 	 * @see http://mumble.sourceforge.net/Protocol
 	 */
 	public ServerInfoResponse(Server server, byte[] response, int latency) {
+		getClassInfo();
 		ByteBuffer buffer = ByteBuffer.wrap(response);
 		mVersion = buffer.getInt();
 		mIdentifier = buffer.getLong();

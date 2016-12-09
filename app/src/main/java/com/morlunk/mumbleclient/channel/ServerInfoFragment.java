@@ -32,11 +32,14 @@ import com.morlunk.jumble.net.JumbleConnection;
 import com.morlunk.jumble.net.JumbleUDPMessageType;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.util.JumbleServiceFragment;
+import com.morlunk.mumbleclient.util.Log;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
 
 /**
  * A fragment that displays known information from the remote server.
@@ -61,6 +64,8 @@ public class ServerInfoFragment extends JumbleServiceFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getClassInfo();
+
         View view = inflater.inflate(R.layout.fragment_server_info, container, false);
         mProtocolView = (TextView) view.findViewById(R.id.server_info_protocol);
         mOSVersionView = (TextView) view.findViewById(R.id.server_info_os_version);
@@ -77,6 +82,7 @@ public class ServerInfoFragment extends JumbleServiceFragment {
      * Updates the info from the service.
      */
     public void updateData() throws RemoteException {
+        getClassInfo();
         if(getService() == null
                 || !getService().isSynchronized())
             return;
@@ -113,6 +119,7 @@ public class ServerInfoFragment extends JumbleServiceFragment {
 
     @Override
     public void onServiceBound(IJumbleService service) {
+        getClassInfo();
         // wow this is ugly
         mPollFuture = mExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -142,6 +149,7 @@ public class ServerInfoFragment extends JumbleServiceFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.getClassInfo("ConnectionState: onDisconnected");
         mExecutorService.shutdownNow();
     }
 }

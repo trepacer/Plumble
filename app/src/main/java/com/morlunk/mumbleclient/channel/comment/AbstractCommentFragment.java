@@ -33,6 +33,7 @@ import android.widget.TabHost;
 import com.morlunk.jumble.IJumbleService;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.util.JumbleServiceProvider;
+import com.morlunk.mumbleclient.util.Log;
 
 /**
  * Fragment to change your comment using basic WYSIWYG tools.
@@ -48,12 +49,14 @@ public abstract class AbstractCommentFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.getClassInfo();
         super.onCreate(savedInstanceState);
         mComment = getArguments().getString("comment");
     }
 
     @Override
     public void onAttach(Activity activity) {
+        Log.getClassInfo();
         super.onAttach(activity);
 
         try {
@@ -65,6 +68,7 @@ public abstract class AbstractCommentFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.getClassInfo();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.dialog_comment, null, false);
 
@@ -122,6 +126,7 @@ public abstract class AbstractCommentFragment extends DialogFragment {
     }
 
     protected void loadComment(String comment) {
+        Log.getClassInfo();
         if(mCommentView == null) return;
         mCommentView.loadData(comment, "text/html", "UTF-8");
         mComment = comment;

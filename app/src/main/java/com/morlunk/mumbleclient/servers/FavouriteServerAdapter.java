@@ -25,6 +25,8 @@ import com.morlunk.mumbleclient.R;
 
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 11/05/14.
  */
@@ -34,16 +36,20 @@ public class FavouriteServerAdapter extends ServerAdapter<Server> {
 
     public FavouriteServerAdapter(Context context, List<Server> servers, FavouriteServerAdapterMenuListener listener) {
         super(context, R.layout.server_list_row, servers);
+        //9-5-1.适配器初始化
+        getClassInfo();
         mListener = listener;
     }
 
     @Override
     public int getPopupMenuResource() {
+
         return R.menu.popup_favourite_server;
     }
 
     @Override
     public boolean onPopupItemClick(Server server, MenuItem menuItem) {
+        getClassInfo();
         switch (menuItem.getItemId()) {
             case R.id.menu_server_edit:
                 mListener.editServer(server);

@@ -26,6 +26,8 @@ import com.morlunk.jumble.model.IChannel;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Tools for dealing with the recursive user-channel hierarchy.
  * Created by andrew on 18/10/14.
@@ -37,12 +39,14 @@ public class ModelUtils {
      * @return A list of channels.
      */
     public static List<IChannel> getChannelList(IChannel channel) {
+        getClassInfo();
         LinkedList<IChannel> channels = new LinkedList<IChannel>();
         getChannelList(channel, channels);
         return channels;
     }
 
     private static void getChannelList(IChannel channel, List<IChannel> channels) {
+        getClassInfo();
         channels.add(channel);
         for (IChannel subc : channel.getSubchannels()) {
             if (subc != null) {

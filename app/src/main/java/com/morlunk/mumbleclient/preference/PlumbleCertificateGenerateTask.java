@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class PlumbleCertificateGenerateTask extends AsyncTask<Void, Void, DatabaseCertificate> {
 	private static final String DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
 
@@ -45,6 +47,8 @@ public class PlumbleCertificateGenerateTask extends AsyncTask<Void, Void, Databa
 	
 	@Override
 	protected void onPreExecute() {
+		//1-12-2.在界面上显示一个进度条
+		getClassInfo();
 		super.onPreExecute();
 		
 		loadingDialog = new ProgressDialog(context);
@@ -55,6 +59,7 @@ public class PlumbleCertificateGenerateTask extends AsyncTask<Void, Void, Databa
 	}
 	@Override
 	protected DatabaseCertificate doInBackground(Void... params) {
+		getClassInfo();
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			JumbleCertificateGenerator.generateCertificate(baos);
@@ -74,6 +79,8 @@ public class PlumbleCertificateGenerateTask extends AsyncTask<Void, Void, Databa
 	
 	@Override
 	protected void onPostExecute(DatabaseCertificate result) {
+		getClassInfo();
+		//1-12-3.证书生成完成
 		super.onPostExecute(result);
 		if(result == null) {
 			Toast.makeText(context, R.string.generateCertFailure, Toast.LENGTH_SHORT).show();

@@ -45,6 +45,8 @@ import com.morlunk.mumbleclient.db.PublicServer;
 
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Displays a list of servers, and allows the user to connect and edit them.
  * @author morlunk
@@ -59,12 +61,16 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
+        //9-3-2.服务器列表Fragment被加载
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onAttach(Activity activity) {
+        //9-3-1.服务器列表Fragment被绑定
+        getClassInfo();
         super.onAttach(activity);
 
         try {
@@ -78,6 +84,8 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getClassInfo();
+        //9-3-3.服务器列表Fragment被加载
         View view = inflater.inflate(R.layout.fragment_server_list, container, false);
         mServerGrid = (GridView) view.findViewById(R.id.server_list_grid);
         mServerGrid.setOnItemClickListener(this);
@@ -99,18 +107,23 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getClassInfo();
+        //9-3-8.初始化Menu菜单
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_server_list, menu);
     }
 
     @Override
     public void onResume() {
+        getClassInfo();
+        //9-3-4.服务器列表Fragment获得焦点
         super.onResume();
         updateServers();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        getClassInfo();
         switch (item.getItemId()) {
             case R.id.menu_add_server_item:
                 //1. 增加服务器
@@ -126,16 +139,19 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
     }
 
     public void addServer() {
+        getClassInfo();
         ServerEditFragment.createServerEditDialog(getActivity(), null, ServerEditFragment.Action.ADD_ACTION, false)
                 .show(getFragmentManager(), "serverInfo");
     }
 
     public void editServer(Server server) {
+        getClassInfo();
         ServerEditFragment.createServerEditDialog(getActivity(), server, ServerEditFragment.Action.EDIT_ACTION, false)
                 .show(getFragmentManager(), "serverInfo");
     }
 
     public void shareServer(Server server) {
+        getClassInfo();
         // Build Mumble server URL
         String serverUrl = "mumble://"+server.getHost()+":"+server.getPort()+"/";
 
@@ -147,6 +163,7 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
     }
 
     public void deleteServer(final Server server) {
+        getClassInfo();
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
         alertBuilder.setMessage(R.string.confirm_delete_server);
         alertBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -161,7 +178,10 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
     }
 
     public void updateServers() {
+        getClassInfo();
+        //9-3-5.更新服务器列表
         List<Server> servers = getServers();
+        //9-3-7.创建服务器列表适配器,绑定适配器
         mServerAdapter = new FavouriteServerAdapter(getActivity(), servers, this);
         mServerGrid.setAdapter(mServerAdapter);
     }
@@ -169,12 +189,15 @@ public class FavouriteServerListFragment extends Fragment implements OnItemClick
 
 
     public List<Server> getServers() {
+        getClassInfo();
+        //9-3-6.获取服务器列表
         List<Server> servers = mDatabaseProvider.getDatabase().getServers();
         return servers;
     }
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        getClassInfo();
         mConnectHandler.connectToServer((Server) mServerAdapter.getItem(arg2));
     }
 

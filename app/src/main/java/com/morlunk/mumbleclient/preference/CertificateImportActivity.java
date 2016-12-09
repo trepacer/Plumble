@@ -50,6 +50,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.UUID;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 11/01/16.
  */
@@ -58,6 +60,7 @@ public class CertificateImportActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
 
         Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -68,6 +71,7 @@ public class CertificateImportActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        getClassInfo();
         if (requestCode != REQUEST_FILE)
             return;
 
@@ -101,6 +105,7 @@ public class CertificateImportActivity extends Activity {
     }
 
     private void storeKeystore(final char[] password, final String fileName, final InputStream input) {
+        getClassInfo();
         KeyStore keyStore;
         try {
             keyStore = KeyStore.getInstance("PKCS12", new BouncyCastleProvider());

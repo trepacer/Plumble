@@ -23,6 +23,7 @@ import com.morlunk.jumble.IJumbleService;
 import com.morlunk.jumble.model.IUser;
 import com.morlunk.jumble.model.User;
 import com.morlunk.jumble.util.JumbleObserver;
+import com.morlunk.mumbleclient.util.Log;
 
 /**
  * Created by andrew on 03/03/14.
@@ -31,6 +32,7 @@ public class UserCommentFragment extends AbstractCommentFragment {
 
     @Override
     public void requestComment(final IJumbleService service) {
+        Log.getClassInfo();
         service.registerObserver(new JumbleObserver() {
             @Override
             public void onUserStateUpdated(IUser user) {

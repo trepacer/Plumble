@@ -27,6 +27,8 @@ import com.morlunk.jumble.model.IChannel;
 import com.morlunk.jumble.util.IJumbleObserver;
 import com.morlunk.jumble.util.JumbleObserver;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Encapsulates a menu requiring permissions.
  * Created by andrew on 19/11/15.
@@ -62,10 +64,12 @@ public class PermissionsPopupMenu implements PopupMenu.OnDismissListener {
     }
 
     private int getPermissions() {
+        getClassInfo();
         return mChannel.getId() == 0 ? mService.getPermissions() : mChannel.getPermissions();
     }
 
     public void show() {
+        getClassInfo();
         mService.registerObserver(mPermissionsObserver);
         if (getPermissions() == 0) {
             // onMenuPrepare will be called once more once permissions have loaded.

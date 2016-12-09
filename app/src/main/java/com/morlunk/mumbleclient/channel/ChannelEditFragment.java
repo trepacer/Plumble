@@ -35,6 +35,8 @@ import com.morlunk.jumble.net.Permissions;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.util.JumbleServiceProvider;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 23/11/13.
  */
@@ -48,6 +50,7 @@ public class ChannelEditFragment extends DialogFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        getClassInfo();
         super.onAttach(activity);
 
         try {
@@ -59,6 +62,7 @@ public class ChannelEditFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        getClassInfo();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.fragment_channel_edit, null, false);
         mNameField = (TextView) view.findViewById(R.id.channel_edit_name);

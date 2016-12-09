@@ -62,6 +62,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 31/07/13.
  */
@@ -93,6 +95,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
     public ChannelListAdapter(Context context, IJumbleService service, PlumbleDatabase database,
                               FragmentManager fragmentManager, boolean showPinnedOnly,
                               boolean showChannelUserCount) throws RemoteException {
+        getClassInfo();
         setHasStableIds(true);
         mContext = context;
         mService = service;
@@ -115,6 +118,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        getClassInfo();
         LayoutInflater inflater = (LayoutInflater)
                 mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(viewType, viewGroup, false);
@@ -128,6 +132,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        getClassInfo();
         final Node node = mNodes.get(position);
         if (node.isChannel()) {
             final IChannel channel = node.getChannel();
@@ -270,6 +275,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
 
     @Override
     public int getItemViewType(int position) {
+        getClassInfo();
         Node node = mNodes.get(position);
         if (node.isChannel()) {
             return R.layout.channel_row;
@@ -282,6 +288,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
 
     @Override
     public long getItemId(int position) {
+        getClassInfo();
         try {
             return mNodes.get(position).getId();
         } catch (RemoteException e) {
@@ -296,6 +303,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
      * @throws IllegalStateException if the service is not synchronized when calling this.
      */
     public void updateChannels() {
+        getClassInfo();
         mNodes.clear();
         for (int cid : mRootChannels) {
             IChannel channel = mService.getChannel(cid);
@@ -311,6 +319,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
      * @param view The view containing this adapter.
      */
     public void animateUserStateUpdate(IUser user, RecyclerView view) {
+        getClassInfo();
         long itemId = user.getSession() | USER_ID_MASK;
         UserViewHolder uvh = (UserViewHolder) view.findViewHolderForItemId(itemId);
         if (uvh != null) {
@@ -332,6 +341,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
      * @param view The view containing this adapter.
      */
     public void animateUserTalkStateUpdate(IUser user, RecyclerView view) {
+        getClassInfo();
         long itemId = user.getSession() | USER_ID_MASK;
         final UserViewHolder uvh = (UserViewHolder) view.findViewHolderForItemId(itemId);
         if (uvh != null) {
@@ -353,6 +363,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
     }
 
     private Drawable getTalkStateDrawable(IUser user) {
+        getClassInfo();
         Resources resources = mContext.getResources();
         if (user.isSelfDeafened()) {
             return resources.getDrawable(R.drawable.outline_circle_deafened);
@@ -377,6 +388,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
     }
 
     public int getUserPosition(int session) {
+        getClassInfo();
         long itemId = session | USER_ID_MASK;
         for (int i = 0; i < mNodes.size(); i++) {
             Node node = mNodes.get(i);
@@ -392,6 +404,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
     }
 
     public int getChannelPosition(int channelId) {
+        getClassInfo();
         long itemId = channelId | CHANNEL_ID_MASK;
         for (int i = 0; i < mNodes.size(); i++) {
             Node node = mNodes.get(i);
@@ -457,6 +470,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
      * @param service The new service to retrieve channels from.
      */
     public void setService(IJumbleService service) {
+        getClassInfo();
         mService = service;
         if (service.getConnectionState() == JumbleService.ConnectionState.CONNECTED) {
             updateChannels();
@@ -466,6 +480,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter implements UserMenu
 
     @Override
     public void onLocalUserStateUpdated(final IUser user) {
+        getClassInfo();
         notifyDataSetChanged();
 
         // Add or remove registered user from local mute history

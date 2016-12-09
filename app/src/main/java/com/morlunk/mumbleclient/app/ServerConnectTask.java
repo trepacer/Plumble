@@ -30,6 +30,7 @@ import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.db.PlumbleDatabase;
 import com.morlunk.mumbleclient.service.PlumbleService;
+import com.morlunk.mumbleclient.util.Log;
 import com.morlunk.mumbleclient.util.PlumbleTrustStore;
 
 import java.util.ArrayList;
@@ -44,13 +45,16 @@ public class ServerConnectTask extends AsyncTask<Server, Void, Intent> {
     private Settings mSettings;
 
     public ServerConnectTask(Context context, PlumbleDatabase database) {
+        Log.getClassInfo();
         mContext = context;
         mDatabase = database;
+        //7-7-3-1.初始化Setting
         mSettings = Settings.getInstance(context);
     }
 
     @Override
     protected Intent doInBackground(Server... params) {
+        Log.getClassInfo();
         Server server = params[0];
 
         /* Convert input method defined in settings to an integer format used by Jumble. */
@@ -111,7 +115,10 @@ public class ServerConnectTask extends AsyncTask<Server, Void, Intent> {
 
     @Override
     protected void onPostExecute(Intent intent) {
+        Log.getClassInfo();
+        //7-7-3-2.连接server完成
         super.onPostExecute(intent);
+        //7-7-3-3.开始service intent === PlumbleService
         mContext.startService(intent);
     }
 }

@@ -31,6 +31,8 @@ import android.widget.Button;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * A simple activity_wizard providing an easy to use interface for configuring useful settings.
  * Created by andrew on 01/11/13.
@@ -61,6 +63,7 @@ public class WizardActivity extends ActionBarActivity implements WizardNavigatio
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wizard);
 
@@ -97,11 +100,13 @@ public class WizardActivity extends ActionBarActivity implements WizardNavigatio
     }
 
     private void updateNavigationButtons(int pagerPosition) {
+        getClassInfo();
         mBackButton.setText(pagerPosition == 0 ? R.string.wizard_cancel : R.string.wizard_back);
         mNextButton.setText(pagerPosition == mPagerAdapter.getCount() - 1 ? R.string.wizard_finish : R.string.wizard_next);
     }
 
     private void showConfirmQuitDialog() {
+        getClassInfo();
         new AlertDialog.Builder(this)
                 .setMessage(R.string.wizard_confirm_close)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -116,6 +121,7 @@ public class WizardActivity extends ActionBarActivity implements WizardNavigatio
 
     @Override
     public void next() {
+        getClassInfo();
         if (mViewPager.getCurrentItem() == (mPagerAdapter.getCount() - 1)) {
             mSettings.setFirstRun(false); // Mark in settings never to run this wizard again
             finish();
@@ -125,6 +131,7 @@ public class WizardActivity extends ActionBarActivity implements WizardNavigatio
 
     @Override
     public void back() {
+        getClassInfo();
         if(mViewPager.getCurrentItem() == 0)
             showConfirmQuitDialog(); // If cancel is pressed at the beginning of the pager, prompt the user to quit.
         else
@@ -151,6 +158,7 @@ public class WizardActivity extends ActionBarActivity implements WizardNavigatio
 
         @Override
         public CharSequence getPageTitle(int position) {
+            getClassInfo();
             switch (position) {
                 case 0:
                     return getString(R.string.wizard_welcome_title);

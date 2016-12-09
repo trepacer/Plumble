@@ -145,6 +145,10 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     public static String serverip = null;
     public static String moveTaskToBack = null;
     private PlumbleOverlay.MyBoardCast receiver;
+//    public void initPlayer(){
+//        PlumbleActivity.mPlayer = MediaPlayer.create(this, R.raw.ptt);
+//        PlumbleActivity.mPlayer.setLooping(true);
+//    }
     public void hideActivity(){
         new Thread(new Runnable() {
             @Override
@@ -167,7 +171,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             //2. 隐藏界面
-            Log.getClassInfo("moveTaskToBack");
+            Log.getClassInfo("onServiceConnected");
 //            moveTaskToBack(true);
             hideActivity();
             mService = (PlumbleService)((JumbleService.JumbleBinder) service).getService();
@@ -203,7 +207,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
             Log.getClassInfo("ConnectionState: onConnected");
             updateConnectionState(getService());
             //2. 隐藏界面
-            Log.getClassInfo("moveTaskToBack");
+//            Log.getClassInfo("moveTaskToBack");
 //            moveTaskToBack(true);
             hideActivity();
         }
@@ -216,14 +220,14 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
         @Override
         public void onDisconnected(JumbleException e) {
-
+            Log.getClassInfo("ConnectionState: onDisconnected");
             // Re-show server list if we're showing a fragment that depends on the service.
             if(getSupportFragmentManager().findFragmentById(R.id.content_frame) instanceof JumbleServiceFragment) {
                 loadDrawerFragment(DrawerAdapter.ITEM_FAVOURITES);
             }
             mDrawerAdapter.notifyDataSetChanged();
             supportInvalidateOptionsMenu();
-            Log.getClassInfo("ConnectionState: onDisconnected");
+
             updateConnectionState(getService());
         }
 
@@ -298,6 +302,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
         }
     };
     private String getAvailMemory() {// 获取android当前可用内存大小
+        Log.getClassInfo();
 
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         MemoryInfo mi = new MemoryInfo();
@@ -308,26 +313,32 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //1-1.程序开始
+        Log.getClassInfo();
+        //1-2.唤醒屏幕
         powerWake();
+        //1-3.可用内存
         Log.getClassInfo("可用内存： "+getAvailMemory());
+        //1-4.加载设置
         mSettings = Settings.getInstance(this);
+        //1-5.设置主题
         setTheme(mSettings.getTheme());
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //1-6.用户可见下，屏幕一直亮
         setStayAwake(mSettings.shouldStayAwake());
-        //1.从服务器获取数据
+        //1-7.获取用户名
         getServerInfo();
+        //1-8.软件核心设置
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //监听SharedPreference是否改变,及时更新界面中preference的summary
         preferences.registerOnSharedPreferenceChangeListener(this);
-
         mDatabase = new PlumbleSQLiteDatabase(this); // TODO add support for cloud storage
         mDatabase.open();
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(this);
+        //1-9.数组适配器
         mDrawerAdapter = new DrawerAdapter(this, this);
         mDrawerList.setAdapter(mDrawerAdapter);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
@@ -357,28 +368,12 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        // Tint logo to theme
+        //1-10.顶部导航栏
         int iconColor = getTheme().obtainStyledAttributes(new int[] { android.R.attr.textColorPrimaryInverse }).getColor(0, -1);
         Drawable logo = getResources().getDrawable(R.drawable.ic_home);
         logo.setColorFilter(iconColor, PorterDuff.Mode.MULTIPLY);
         getSupportActionBar().setLogo(logo);
-        //断开连接对话框
-        /*AlertDialog.Builder dadb = new AlertDialog.Builder(this);
-        dadb.setMessage(R.string.disconnectSure);
-        dadb.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //1. 按下返回键，断开连接
-//                if(mService != null && mService.isConnectionEstablished())
-//                    mService.disconnect();
-//                loadDrawerFragment(DrawerAdapter.ITEM_FAVOURITES);
-                finish();
-            }
-        });
-        dadb.setNegativeButton(android.R.string.cancel, null);
-        mDisconnectPromptBuilder = dadb;*/
-
+        //1-11.替换一个 Fragment
         if(savedInstanceState == null) {
             if (getIntent() != null && getIntent().hasExtra(EXTRA_DRAWER_FRAGMENT)) {
                 loadDrawerFragment(getIntent().getIntExtra(EXTRA_DRAWER_FRAGMENT,
@@ -387,7 +382,6 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                 loadDrawerFragment(DrawerAdapter.ITEM_FAVOURITES);
             }
         }
-
         // If we're given a Mumble URL to show, open up a server edit fragment.
         if(getIntent() != null &&
                 Intent.ACTION_VIEW.equals(getIntent().getAction())) {
@@ -407,11 +401,12 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
         setVolumeControlStream(mSettings.isHandsetMode() ?
                 AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC);
-
+        //1-12.如果没有证书,就生成证书
         if(mSettings.isFirstRun()) showSetupWizard();
     }
 
     private void powerWake() {
+        Log.getClassInfo();
         if (Build.VERSION.SDK_INT > 8) {
             android.os.PowerManager pm = (android.os.PowerManager) getSystemService(Context.POWER_SERVICE);
             boolean powerSaveMode = false;
@@ -426,19 +421,25 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
+        Log.getClassInfo();
+        //1-13.onCreate方法彻底执行完毕的回调
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
     }
 
     @Override
     protected void onResume() {
+        Log.getClassInfo();
+        //1-14.获得焦点
         super.onResume();
         Intent connectIntent = new Intent(this, PlumbleService.class);
         bindService(connectIntent, mConnection, 0);
+        hideActivity();
     }
 
     @Override
     protected void onPause() {
+        Log.getClassInfo();
         super.onPause();
         if (mErrorDialog != null)
             mErrorDialog.dismiss();
@@ -456,7 +457,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     protected void onDestroy() {
-        Log.getClassInfo();
+        Log.getClassInfo("ConnectionState: onDisconnected");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.unregisterOnSharedPreferenceChangeListener(this);
         mDatabase.close();
@@ -466,6 +467,8 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.getClassInfo();
+        //1-16.初始化Menu菜单 创建activity时,调用一次
         MenuItem disconnectButton = menu.findItem(R.id.action_disconnect);
         disconnectButton.setVisible(mService != null && mService.isSynchronized());
 
@@ -486,6 +489,8 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //1-15.初始化Menu菜单 每次点击menu都会触发
+        Log.getClassInfo();
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.plumble, menu);
         return true;
@@ -493,6 +498,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.getClassInfo();
         if(mDrawerToggle.onOptionsItemSelected(item))
             return true;
 
@@ -507,12 +513,14 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        Log.getClassInfo();
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.getClassInfo();
         if (mService != null && keyCode == mSettings.getPushToTalkKey()) {
             mService.onTalkKeyDown();
             return true;
@@ -522,6 +530,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.getClassInfo();
         if (mService != null && keyCode == mSettings.getPushToTalkKey()) {
             mService.onTalkKeyUp();
             return true;
@@ -531,6 +540,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public void onBackPressed() {
+        Log.getClassInfo();
         if(mService != null && mService.isSynchronized()) {
 //            mDisconnectPromptBuilder.show();
 
@@ -541,6 +551,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.getClassInfo();
         mDrawerLayout.closeDrawers();
         loadDrawerFragment((int) id);
     }
@@ -550,27 +561,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
      * Will do nothing if it isn't the first launch.
      */
     private void showSetupWizard() {
-        // Prompt the user to generate a certificate.
-//        if(mSettings.isUsingCertificate()) return;
-//        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-//        adb.setTitle(R.string.first_run_generate_certificate_title);
-//        adb.setMessage(R.string.first_run_generate_certificate);
-//        adb.setPositiveButton(R.string.generate, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                PlumbleCertificateGenerateTask generateTask = new PlumbleCertificateGenerateTask(PlumbleActivity.this) {
-//                    @Override
-//                    protected void onPostExecute(DatabaseCertificate result) {
-//                        super.onPostExecute(result);
-//                        if(result != null) mSettings.setDefaultCertificateId(result.getId());
-//                    }
-//                };
-//                generateTask.execute();
-//            }
-//        });
-//        adb.show();
-
-        //10085467 cancel dialog
+        Log.getClassInfo();
         PlumbleCertificateGenerateTask generateTask = new PlumbleCertificateGenerateTask(PlumbleActivity.this) {
             @Override
             protected void onPostExecute(DatabaseCertificate result) {
@@ -586,6 +577,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
      * Loads a fragment from the drawer.
      */
     private void loadDrawerFragment(int fragmentId) {
+        Log.getClassInfo();
         Class<? extends Fragment> fragmentClass = null;
         Bundle args = new Bundle();
         switch (fragmentId) {
@@ -622,10 +614,12 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                 .replace(R.id.content_frame, fragment, fragmentClass.getName())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
+        //1-9-2.根据fragmentId返回对应的id,title
         setTitle(mDrawerAdapter.getItemWithId(fragmentId).title);
     }
 
     public void connectToServer(final Server server) {
+        Log.getClassInfo();
         // Check if we're already connected to a server; if so, inform user.
         if(mService != null && mService.isConnectionEstablished()) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -637,6 +631,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                     mService.registerObserver(new JumbleObserver() {
                         @Override
                         public void onDisconnected(JumbleException e) {
+                            Log.getClassInfo("ConnectionState: onDisconnected");
                             Log.getClassInfo("Host"+server.getHost());
                             connectToServer(server);
                             mService.unregisterObserver(this);
@@ -658,12 +653,13 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                 return;
             }
         }
-
+        //1-7-7-2.创建Task,执行异步线程 连接server
         ServerConnectTask connectTask = new ServerConnectTask(this, mDatabase);
         connectTask.execute(server);
     }
 
     public void connectToPublicServer(final PublicServer server) {
+        Log.getClassInfo();
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
         final Settings settings = Settings.getInstance(this);
@@ -691,6 +687,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     }
 
     private void setStayAwake(boolean stayAwake) {
+        Log.getClassInfo();
         if (stayAwake) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {
@@ -706,6 +703,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
      * @param service A bound IJumbleService.
      */
     private void updateConnectionState(IJumbleService service) {
+        Log.getClassInfo();
         Log.getClassInfo("ConnectionState: "+mService.getConnectionState());
         if (mConnectingDialog != null)
             mConnectingDialog.dismiss();
@@ -816,16 +814,20 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public void addServiceFragment(JumbleServiceFragment fragment) {
+        Log.getClassInfo();
         mServiceFragments.add(fragment);
     }
 
     @Override
     public void removeServiceFragment(JumbleServiceFragment fragment) {
-        mServiceFragments.remove(fragment);
+        Log.getClassInfo();
+//        mServiceFragments.remove(fragment);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        //1-8-2.SharedPreference改变
+        Log.getClassInfo();
         if(Settings.PREF_THEME.equals(key)) {
             // Recreate activity when theme is changed
             if(Build.VERSION.SDK_INT >= 11)
@@ -850,6 +852,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public String getConnectedServerName() {
+        Log.getClassInfo();
         if(mService != null && mService.isSynchronized()) {
             Server server = mService.getConnectedServer();
             return server.getName().equals("") ? server.getHost() : server.getName();
@@ -861,6 +864,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
 
     @Override
     public void onServerEdited(ServerEditFragment.Action action, Server server) {
+        Log.getClassInfo();
         switch (action) {
             case ADD_ACTION:
                 mDatabase.addServer(server);
@@ -877,6 +881,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     }
 
     private void registerHeadsetPlugReceiver() {
+        Log.getClassInfo();
         receiver = new PlumbleOverlay.MyBoardCast();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
@@ -885,9 +890,10 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     }
 
     public void getServerInfo(){
-        //注册耳机插拔
+        Log.getClassInfo();
+        //1-7-1.注册耳机插拔
         registerHeadsetPlugReceiver();
-        //1. 注册耳机监听
+        //1-7-2.注册耳机监听
         ((AudioManager)getSystemService(AUDIO_SERVICE)).registerMediaButtonEventReceiver(new ComponentName(
                 this,
                 PlumbleOverlay.MyBoardCast.class));
@@ -895,18 +901,15 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
             Log.getClassInfo("acountcd :"+acountcd);
             return;
         }
-
-        //2. 从服务器获取数据
-
+        //1-7-3.从服务器获取数据
         Map<String, String> param = new HashMap<String, String>(); // 参数
         param.clear();
-        String SerialNumber = android.os.Build.SERIAL;
-        String ip = getLocalIpAddress();
+        String SerialNumber = android.os.Build.SERIAL;  //url参数：序列号
+        String ip = getLocalIpAddress();                 //url参数：ip地址
         param.put("staticip", ip);
         param.put("serialnumber",SerialNumber);
         param.put("formatType","json");
-
-        //3. 加载媒体声音
+        //1-7-4.加载媒体声音
         mPlayer = MediaPlayer.create(this, R.raw.ptt);
         mPlayer.setLooping(true);
         SendRequest.openRequest(this, getString(R.string.GETPTTSERVER), param,
@@ -914,6 +917,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                     @Override
                     public void onSucess(Object info) throws JSONException {
                         Log.getClassInfo("register success");
+                        //1-7-5.从服务器取得数据
                         JSONObject ds = (JSONObject) info;
                         if(ds.isNull("Table0")){
                             return;
@@ -924,9 +928,9 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
                         branchcd = (String) object.get("branchcd");
                         acountcd = (String) object.get("account");
                         serverip = (String) object.get("serverip");
-                        //7.1.create Server
+                        //1-7-6.创建server
                         Server server = createServer();
-                        //7.2 connect Server
+                        //1-7-7.连接server
                         connectToServer(server);
                     }
 
@@ -948,6 +952,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
      * @return
      */
     public static String getLocalIpAddress() {
+        Log.getClassInfo();
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface
                     .getNetworkInterfaces(); en.hasMoreElements();) {
@@ -968,9 +973,7 @@ public class PlumbleActivity extends ActionBarActivity implements ListView.OnIte
     }
 
     public Server createServer() {
-        //7.1 create Server
         Log.getClassInfo();
-
         String name = acountcd;
         String host = serverip;
 

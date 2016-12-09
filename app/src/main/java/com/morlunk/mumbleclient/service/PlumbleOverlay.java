@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,6 +37,8 @@ import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.app.PlumbleActivity;
 import com.morlunk.mumbleclient.channel.ChannelAdapter;
 import com.morlunk.mumbleclient.util.Log;
+
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
 
 /**
  * An onscreen interactive overlay displaying the users in the current channel.
@@ -57,6 +60,8 @@ public class PlumbleOverlay {
     private static PlumbleService mService;
 
     public PlumbleOverlay(PlumbleService service) {
+        //7-3-5-1.初始化对讲窗口
+        getClassInfo();
         mService = service;
         mOverlayView = View.inflate(service, R.layout.overlaycustom, null);//自定义页面
         mTalkButton = (ImageView) mOverlayView.findViewById(R.id.overlay_talk);
@@ -85,9 +90,11 @@ public class PlumbleOverlay {
                 return false;
             }
         });
-
+        //7-3-5-2.加载设置
         Settings settings = Settings.getInstance(service);
+        //7-3-5-3.选择ptt模式  3种模式
         boolean usingPtt = Settings.ARRAY_INPUT_METHOD_PTT.equals(settings.getInputMethod());
+        //7-3-5-4.设置ptt按钮显示
         setPushToTalkShown(usingPtt);
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +121,7 @@ public class PlumbleOverlay {
     }
 
     public void show() {
+        getClassInfo();
         if(mShown)
             return;
         mShown = true;
@@ -122,6 +130,7 @@ public class PlumbleOverlay {
     }
 
     public void hide() {
+        getClassInfo();
         if(!mShown)
             return;
         mShown = false;
@@ -134,13 +143,16 @@ public class PlumbleOverlay {
     }
 
     public void setPushToTalkShown(boolean showPtt) {
+        getClassInfo();
         mTalkButton.setVisibility(showPtt ? View.VISIBLE : View.GONE);
     }
 
     public static class MyBoardCast  extends BroadcastReceiver {
+
         public static boolean talkStatue = false;
         @Override
         public void onReceive(Context context, Intent intent) {
+            getClassInfo();
             String action = intent.getAction();
             Log.getClassInfo("action: "+action);
 
@@ -161,12 +173,18 @@ public class PlumbleOverlay {
                 KeyEvent keyEvent = (KeyEvent) intent.getExtras().get(Intent.EXTRA_KEY_EVENT);
                 if(keyEvent.getAction() == KeyEvent.ACTION_DOWN){
                     Log.getClassInfo("talkStatue: "+talkStatue);
+                    //mPlayer is null
                     if (talkStatue){
                         mService.setTalkingState(false);
                         PlumbleActivity.mPlayer.pause();
                         talkStatue = false;
                     }else{
                         mService.setTalkingState(true);
+                        //10085467 mPlayer is null
+//                        if(PlumbleActivity.mPlayer == null){
+//                            PlumbleActivity.mPlayer = MediaPlayer.create(context, R.raw.ptt);
+//                            PlumbleActivity.mPlayer.setLooping(true);
+//                        }
                         PlumbleActivity.mPlayer.start();
                         talkStatue = true;
                     }
@@ -175,6 +193,14 @@ public class PlumbleOverlay {
                 Intent mainActivityIntent = new Intent(context, PlumbleActivity.class);  // 要启动的Activity
                 mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(mainActivityIntent);
+            }else if("com.tre.android.ptt_press".equals(action)){
+                Log.getClassInfo("action: "+action);
+                mService.setTalkingState(false);
+                PlumbleActivity.mPlayer.pause();
+            }else if("com.tre.android.ptt_release".equals(action)){
+                Log.getClassInfo("action: "+action);
+                mService.setTalkingState(true);
+                PlumbleActivity.mPlayer.start();
             }
         }
     }

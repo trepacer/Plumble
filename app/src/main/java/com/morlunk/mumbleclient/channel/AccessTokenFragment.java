@@ -43,6 +43,8 @@ import com.morlunk.mumbleclient.util.JumbleServiceFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class AccessTokenFragment extends JumbleServiceFragment {
 
     public interface AccessTokenListener {
@@ -60,6 +62,7 @@ public class AccessTokenFragment extends JumbleServiceFragment {
 
     @Override
 	public void onAttach(Activity activity) {
+		getClassInfo();
 		super.onAttach(activity);
 
         mTokens = new ArrayList<String>(getAccessTokens());
@@ -75,6 +78,7 @@ public class AccessTokenFragment extends JumbleServiceFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		getClassInfo();
 		View view = inflater.inflate(R.layout.fragment_tokens, container, false);
 
         mTokenList = (ListView) view.findViewById(R.id.tokenList);
@@ -106,6 +110,7 @@ public class AccessTokenFragment extends JumbleServiceFragment {
 	}
 
 	private void addToken() {
+		getClassInfo();
 		String tokenText = mTokenField.getText().toString().trim();
 		
 		if(tokenText.equals(""))
@@ -140,6 +145,7 @@ public class AccessTokenFragment extends JumbleServiceFragment {
 		
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
+			getClassInfo();
 			View view = convertView;
 			if(convertView == null) {
 				view = getActivity().getLayoutInflater().inflate(R.layout.token_row, null, false);

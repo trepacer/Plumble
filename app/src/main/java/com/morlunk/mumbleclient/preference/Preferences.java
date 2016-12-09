@@ -52,6 +52,8 @@ import java.util.List;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * This entire class is a mess.
  * FIXME. Please.
@@ -69,6 +71,7 @@ public class Preferences extends PreferenceActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
 
         // Legacy preference section handling
@@ -97,20 +100,24 @@ public class Preferences extends PreferenceActivity {
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
+        getClassInfo();
         loadHeadersFromResource(R.xml.preference_headers, target);
     }
 
     @Override
     protected boolean isValidFragment(String fragmentName) {
+        getClassInfo();
         return PlumblePreferenceFragment.class.getName().equals(fragmentName);
     }
 
     private static void configureOrbotPreferences(PreferenceScreen screen) {
+        getClassInfo();
         Preference useOrbotPreference = screen.findPreference(USE_TOR_KEY);
         useOrbotPreference.setEnabled(OrbotHelper.isOrbotInstalled(screen.getContext()));
     }
 
     private static void configureAudioPreferences(final PreferenceScreen screen) {
+        getClassInfo();
         ListPreference inputPreference = (ListPreference) screen.findPreference(Settings.PREF_INPUT_METHOD);
         inputPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -134,6 +141,7 @@ public class Preferences extends PreferenceActivity {
     }
 
     private static void updateAudioDependents(PreferenceScreen screen, String inputMethod) {
+        getClassInfo();
         PreferenceCategory pttCategory = (PreferenceCategory) screen.findPreference("ptt_settings");
         PreferenceCategory vadCategory = (PreferenceCategory) screen.findPreference("vad_settings");
         pttCategory.setEnabled(Settings.ARRAY_INPUT_METHOD_PTT.equals(inputMethod));
@@ -141,6 +149,7 @@ public class Preferences extends PreferenceActivity {
     }
 
     private static void configureAboutPreferences(Context context, PreferenceScreen screen) {
+        getClassInfo();
         String version = "Unknown";
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -157,6 +166,7 @@ public class Preferences extends PreferenceActivity {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
+            getClassInfo();
             super.onCreate(savedInstanceState);
 
             String section = getArguments().getString("settings");

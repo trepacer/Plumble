@@ -34,6 +34,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 05/05/14.
  */
@@ -43,6 +45,7 @@ class PublicServerFetchTask extends AsyncTask<Void, Void, List<PublicServer>> {
 
     @Override
     protected List<PublicServer> doInBackground(Void... params) {
+        getClassInfo();
         try {
             // Fetch XML from server
             URL url = new URL(MUMBLE_PUBLIC_URL);
@@ -83,6 +86,7 @@ class PublicServerFetchTask extends AsyncTask<Void, Void, List<PublicServer>> {
     }
 
     private PublicServer readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+        getClassInfo();
         String name = parser.getAttributeValue(null, "name");
         String ca = parser.getAttributeValue(null, "ca");
         String continentCode = parser.getAttributeValue(null, "continent_code");

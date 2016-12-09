@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 04/11/13.
  */
@@ -39,6 +41,7 @@ public class WizardAudioFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getClassInfo();
         View view = inflater.inflate(R.layout.fragment_wizard_audio, container, false);
         mSpinnerAdapter = new AudioInputSpinnerAdapter();
         mInputSpinner = (Spinner) view.findViewById(R.id.wizard_audio_input_spinner);
@@ -47,6 +50,7 @@ public class WizardAudioFragment extends Fragment {
     }
 
     private class AudioInputSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
+
 
         @Override
         public int getCount() {
@@ -73,6 +77,7 @@ public class WizardAudioFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            getClassInfo();
             View view = convertView;
             if(view == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -85,6 +90,7 @@ public class WizardAudioFragment extends Fragment {
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            getClassInfo();
             View view = convertView;
             if(view == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();

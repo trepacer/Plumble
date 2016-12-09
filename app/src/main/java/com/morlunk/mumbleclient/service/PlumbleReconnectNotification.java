@@ -27,6 +27,8 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * A notification indicating auto-reconnect is in progress, or if auto-reconnect is disabled,
  * a prompt to reconnect with the error message.
@@ -58,6 +60,7 @@ public class PlumbleReconnectNotification {
                                                     String error,
                                                     boolean autoReconnect,
                                                     OnActionListener listener) {
+        getClassInfo();
         PlumbleReconnectNotification notification = new PlumbleReconnectNotification(context, listener);
         notification.show(error, autoReconnect);
         return notification;
@@ -69,6 +72,7 @@ public class PlumbleReconnectNotification {
     }
 
     public void show(String error, boolean autoReconnect) {
+        getClassInfo();
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_DISMISS);
         filter.addAction(BROADCAST_RECONNECT);
@@ -111,6 +115,7 @@ public class PlumbleReconnectNotification {
     }
 
     public void hide() {
+        getClassInfo();
         try {
             mContext.unregisterReceiver(mNotificationReceiver);
         } catch (IllegalArgumentException e) {

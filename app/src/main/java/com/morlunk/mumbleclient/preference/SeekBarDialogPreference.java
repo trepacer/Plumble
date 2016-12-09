@@ -34,6 +34,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 
 public class SeekBarDialogPreference extends DialogPreference implements SeekBar.OnSeekBarChangeListener {
     private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
@@ -45,6 +47,7 @@ public class SeekBarDialogPreference extends DialogPreference implements SeekBar
 
     public SeekBarDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        getClassInfo();
         mContext = context;
 
         mDialogMessage = attrs.getAttributeValue(ANDROID_NS, "dialogMessage");
@@ -58,6 +61,7 @@ public class SeekBarDialogPreference extends DialogPreference implements SeekBar
 
     @Override
     protected View onCreateDialogView() {
+        getClassInfo();
         LinearLayout.LayoutParams params;
         LinearLayout layout = new LinearLayout(mContext);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -90,6 +94,7 @@ public class SeekBarDialogPreference extends DialogPreference implements SeekBar
 
     @Override
     protected void onBindDialogView(View v) {
+        getClassInfo();
         super.onBindDialogView(v);
         mSeekBar.setMax(mMax - mMin);
         mSeekBar.setProgress(mValue - mMin);
@@ -97,6 +102,7 @@ public class SeekBarDialogPreference extends DialogPreference implements SeekBar
 
     @Override
     protected void onSetInitialValue(boolean restore, Object defaultValue) {
+        getClassInfo();
         super.onSetInitialValue(restore, defaultValue);
         if (restore)
             mValue = (shouldPersist() ? getPersistedInt(mDefault) / mMultiplier : 0);
@@ -105,6 +111,7 @@ public class SeekBarDialogPreference extends DialogPreference implements SeekBar
     }
 
     public void onProgressChanged(SeekBar seek, int value, boolean fromTouch) {
+        getClassInfo();
         String t = String.valueOf((value * mMultiplier) + (mMultiplier * mMin));
         mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
     }
@@ -120,6 +127,7 @@ public class SeekBarDialogPreference extends DialogPreference implements SeekBar
        */
     @Override
     protected void onDialogClosed(boolean positiveResult) {
+        getClassInfo();
         super.onDialogClosed(positiveResult);
         if (positiveResult && shouldPersist()) {
             persistInt(mMultiplier * (mMin + mSeekBar.getProgress()));

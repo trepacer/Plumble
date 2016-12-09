@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.channel.ChatTargetProvider;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * A callback that sets the active chat target when activated, and resets when destroyed (usually
  * to the user's current channel).
@@ -40,6 +42,7 @@ public class ChatTargetActionModeCallback implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        getClassInfo();
         actionMode.setTitle(mChatTarget.getName());
         actionMode.setSubtitle(R.string.current_chat_target);
         mProvider.setChatTarget(getChatTarget());

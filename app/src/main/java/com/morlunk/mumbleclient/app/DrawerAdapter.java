@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.morlunk.mumbleclient.R;
+import com.morlunk.mumbleclient.util.Log;
 
 /**
  * Created by andrew on 01/08/13.
@@ -96,6 +97,8 @@ public class DrawerAdapter extends ArrayAdapter<DrawerAdapter.DrawerRow> {
 
     public DrawerAdapter(Context context, DrawerDataProvider provider) {
         super(context, 0);
+        //9-1.数组初始化
+        Log.getClassInfo();
         mProvider = provider;
         add(new DrawerAdapter.DrawerHeader(HEADER_CONNECTED_SERVER, context.getString(R.string.drawer_not_connected)));
         add(new DrawerAdapter.DrawerItem(ITEM_SERVER, context.getString(R.string.drawer_server), R.drawable.ic_action_channels));
@@ -163,6 +166,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerAdapter.DrawerRow> {
     }
 
     public DrawerRow getItemWithId(int id) {
+        Log.getClassInfo();
         for(int x=0;x<getCount();x++) {
             DrawerRow row = getItem(x);
             if(row.id == id) return row;
@@ -172,6 +176,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerAdapter.DrawerRow> {
 
     @Override
     public boolean isEnabled(int position) {
+        Log.getClassInfo();
         int viewType = getItemViewType(position);
         if(viewType == ITEM_TYPE) {
             switch ((int) getItemId(position)) {

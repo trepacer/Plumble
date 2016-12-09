@@ -65,6 +65,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Displays a list of public servers that can be connected to, sorted, and favourited.
  * @author morlunk
@@ -81,6 +83,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         
         setHasOptionsMenu(true);
@@ -88,6 +91,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     
     @Override
     public void onAttach(Activity activity) {
+        getClassInfo();
         super.onAttach(activity);
         
         try {
@@ -100,6 +104,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        getClassInfo();
         super.onActivityCreated(savedInstanceState);
         fillPublicList();
     }
@@ -107,6 +112,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        getClassInfo();
         View view = inflater.inflate(R.layout.fragment_public_server_list, container, false);
         mServerGrid = (GridView) view.findViewById(R.id.server_list_grid);
         mServerGrid.setOnItemClickListener(this);
@@ -119,18 +125,21 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        getClassInfo();
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_match_server).setVisible(VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB); // Executors only supported on Honeycomb +
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getClassInfo();
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_public_server_list, menu);
     }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        getClassInfo();
         if (isFilled()) {
             switch(item.getItemId()) {
                 case R.id.menu_match_server:
@@ -149,6 +158,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
 
     @Override
     public void favouriteServer(final Server server) {
+        getClassInfo();
         final Settings settings = Settings.getInstance(getActivity());
         final EditText usernameField = new EditText(getActivity());
         usernameField.setHint(settings.getDefaultUsername());
@@ -172,6 +182,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     }
     
     public void setServers(List<PublicServer> servers) {
+        getClassInfo();
         mServers = servers;
         mServerProgress.setVisibility(View.GONE);
         mServerAdapter = new PublicServerAdapter(getActivity(), servers, this);
@@ -183,6 +194,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     }
 
     private void showMatchDialog() {
+        getClassInfo();
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
         adb.setTitle(R.string.server_match);
         adb.setMessage(R.string.server_match_description);
@@ -197,11 +209,13 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     }
 
     private void findOptimalServer() {
+        getClassInfo();
         MatchServerTask matchServerTask = new MatchServerTask();
         matchServerTask.execute(Locale.getDefault().getCountry());
     }
 
     private void showSortDialog() {
+        getClassInfo();
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
         alertBuilder.setTitle(R.string.sortBy);
         alertBuilder.setItems(new String[] { getString(R.string.name), getString(R.string.country)}, new SortClickListener());
@@ -209,6 +223,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     }
     
     private void showFilterDialog() {
+        getClassInfo();
         View dialogView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_server_search, null);
         final EditText nameText = (EditText) dialogView.findViewById(R.id.server_search_name);
         final EditText countryText = (EditText) dialogView.findViewById(R.id.server_search_country);
@@ -271,6 +286,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
     }
 
     private void fillPublicList() {
+        getClassInfo();
         new PublicServerFetchTask() {
             protected void onPostExecute(List<PublicServer> result) {
                 super.onPostExecute(result);
@@ -311,6 +327,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
         
         @Override
         public void onClick(DialogInterface dialog, int which) {
+            getClassInfo();
             ArrayAdapter<PublicServer> arrayAdapter = mServerAdapter;
             if(which == SORT_NAME) {
                 arrayAdapter.sort(nameComparator);
@@ -345,6 +362,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
         private class MatchServerInfoTask extends ServerInfoTask {
             @Override
             protected void onPostExecute(ServerInfoResponse serverInfoResponse) {
+                getClassInfo();
                 mResponseCount++;
                 if(serverInfoResponse == null) {
                     // TODO handle bad responses
@@ -375,6 +393,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
 
         @Override
         protected void onPreExecute() {
+            getClassInfo();
             super.onPreExecute();
             mProgressDialog = ProgressDialog.show(getActivity(), null, getString(R.string.server_match_progress));
             mProgressDialog.setCancelable(true);
@@ -389,6 +408,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
 
         @Override
         protected ServerInfoResponse doInBackground(String... params) {
+            getClassInfo();
             final String country = params.length > 0 ? params[0] : null; // If a country is provided, search within country
 
             Collection<PublicServer> servers;
@@ -433,6 +453,7 @@ public class PublicServerListFragment extends Fragment implements OnItemClickLis
 
         @Override
         protected void onPostExecute(ServerInfoResponse response) {
+            getClassInfo();
             super.onPostExecute(response);
             final PublicServer publicServer = response == null ? null : (PublicServer) response.getServer();
             mProgressDialog.hide();

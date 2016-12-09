@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 03/11/13.
  */
@@ -32,6 +34,7 @@ public class WizardWelcomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getClassInfo();
         return inflater.inflate(R.layout.fragment_wizard_welcome, container, false);
     }
 }

@@ -26,6 +26,8 @@ import android.view.WindowManager;
 
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * A hot corner in an area of the screen specified by {@link PlumbleHotCorner#getGravity()}.
  * Created by andrew on 07/06/14.
@@ -40,6 +42,8 @@ public class PlumbleHotCorner implements View.OnTouchListener {
     private WindowManager.LayoutParams mParams;
 
     public PlumbleHotCorner(Context context, int gravity, PlumbleHotCornerListener listener) {
+        getClassInfo();
+        //7-3-6-2.屏幕位置初始化
         if(listener == null) {
             throw new NullPointerException("A PlumbleHotCornerListener must be assigned.");
         }
@@ -69,6 +73,7 @@ public class PlumbleHotCorner implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        getClassInfo();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mView.setBackgroundColor(mHighlightColour);
@@ -84,6 +89,7 @@ public class PlumbleHotCorner implements View.OnTouchListener {
     }
 
     public void setShown(boolean shown) {
+        getClassInfo();
         if(shown == mShown) return;
         if(shown) {
             mWindowManager.addView(mView, mParams);
@@ -94,6 +100,7 @@ public class PlumbleHotCorner implements View.OnTouchListener {
     }
 
     public boolean isShown() {
+
         return mShown;
     }
 

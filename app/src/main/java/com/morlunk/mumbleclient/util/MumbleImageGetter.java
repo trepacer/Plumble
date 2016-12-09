@@ -38,6 +38,8 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Implementation of ImageGetter designed for Mumble MOTDs and messages.
  * Can read base64-embedded images and references. Caches them too.
@@ -53,6 +55,7 @@ public class MumbleImageGetter implements Html.ImageGetter {
     private Map<String, Drawable> mBitmapCache;
 
     public MumbleImageGetter(Context context) {
+        getClassInfo();
         mContext = context;
         mSettings = Settings.getInstance(context);
         mBitmapCache = new HashMap<String, Drawable>();
@@ -64,6 +67,7 @@ public class MumbleImageGetter implements Html.ImageGetter {
 
     @Override
     public Drawable getDrawable(String source) {
+        getClassInfo();
         Drawable cachedDrawable = mBitmapCache.get(source);
         if(cachedDrawable != null) return cachedDrawable;
 
@@ -96,11 +100,13 @@ public class MumbleImageGetter implements Html.ImageGetter {
     }
 
     private Bitmap getBase64Image(String base64) throws IllegalArgumentException {
+        getClassInfo();
         byte[] src = Base64.decode(base64, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(src, 0, src.length);
     }
 
     private Bitmap getURLImage(String source) {
+        getClassInfo();
         try {
             URL url = new URL(source);
             URLConnection conn = url.openConnection();

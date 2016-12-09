@@ -42,6 +42,7 @@
         <activity android:name=".wizard.WizardActivity" />
         <activity
             android:name=".preference.Preferences"
+            android:screenOrientation="portrait"
             android:parentActivityName=".app.PlumbleActivity" >
             <intent-filter>
                 <action android:name="com.morlunk.mumbleclient.app.PREFS_GENERAL" />
@@ -75,6 +76,7 @@
             android:enabled="true" />
         <activity
             android:name=".app.PlumbleActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -144,6 +146,9 @@
                 <action android:name="com.android.music.HEADSET_key_input" />
                 <action android:name="android.speech.action.WEB_SEARCH" />
                 <action android:name="android.speech.action.VOICE_SEARCH_HANDS_FREE" />
+
+                <action android:name="com.tre.android.ptt_press"/>
+                <action android:name="com.tre.android.ptt_release"/>
             </intent-filter>
         </receiver>
     </application>

@@ -32,6 +32,8 @@ import com.morlunk.mumbleclient.preference.PlumbleCertificateGenerateTask;
 
 import java.io.File;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 02/11/13.
  */
@@ -42,6 +44,7 @@ public class WizardCertificateFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
+        getClassInfo();
         super.onAttach(activity);
         try {
             mNavigation = (WizardNavigation) activity;
@@ -52,6 +55,7 @@ public class WizardCertificateFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getClassInfo();
         View view = inflater.inflate(R.layout.fragment_wizard_certificate, container, false);
         mGenerateButton = (Button) view.findViewById(R.id.wizard_certificate_generate);
         mGenerateButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +68,7 @@ public class WizardCertificateFragment extends Fragment {
     }
 
     private void generateCertificate() {
+        getClassInfo();
         final Settings settings = Settings.getInstance(getActivity());
         PlumbleCertificateGenerateTask task = new PlumbleCertificateGenerateTask(getActivity()) {
             @Override

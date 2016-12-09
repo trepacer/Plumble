@@ -51,6 +51,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * An extension of the Jumble service with some added Plumble-exclusive non-standard Mumble features.
  * Created by andrew on 28/07/13.
@@ -112,12 +114,13 @@ public class PlumbleService extends JumbleService implements
 
         @Override
         public void onConnecting() {
+            //7-3-8.连接中 删除旧的通知
             // Remove old notification left from reconnect,
             if (mReconnectNotification != null) {
                 mReconnectNotification.hide();
                 mReconnectNotification = null;
             }
-
+            //7-3-9.为服务创建前台通知
             mNotification = PlumbleConnectionNotification.showForeground(PlumbleService.this,
                     getString(R.string.plumbleConnecting),
                     getString(R.string.connecting),
@@ -144,6 +147,7 @@ public class PlumbleService extends JumbleService implements
 
         @Override
         public void onDisconnected(JumbleException e) {
+            Log.getClassInfo("ConnectionState: onDisconnected");
             if (mNotification != null) {
                 mNotification.hide();
                 mNotification = null;
@@ -272,10 +276,13 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void onCreate() {
+        getClassInfo();
+        //7-3-4.PlumbleService初始化
         super.onCreate();
         registerObserver(mObserver);
 
         // Register for preference changes
+        //7-3-4-2.加载设置
         mSettings = Settings.getInstance(this);
         mPTTSoundEnabled = mSettings.isPttSoundEnabled();
         mShortTtsMessagesEnabled = mSettings.isShortTextToSpeechMessagesEnabled();
@@ -285,9 +292,10 @@ public class PlumbleService extends JumbleService implements
         // Manually set theme to style overlay views
         // XML <application> theme does NOT do this!
         setTheme(R.style.Theme_Plumble);
-
+        //7-3-4-3.实例化对讲窗口
         // Instantiate overlay view
         mChannelOverlay = new PlumbleOverlay(this);
+        //7-3-6.设置对讲窗口在屏幕区域位置
         mHotCorner = new PlumbleHotCorner(this, mSettings.getHotCornerGravity(), mHotCornerListener);
 
         // Set up TTS
@@ -296,11 +304,13 @@ public class PlumbleService extends JumbleService implements
 
         mTalkReceiver = new TalkBroadcastReceiver(this);
         mMessageLog = new ArrayList<>();
+        //7-3-7.初始化通知栏
         mMessageNotification = new PlumbleMessageNotification(PlumbleService.this);
     }
 
     @Override
     public void onDestroy() {
+        Log.getClassInfo("ConnectionState: onDisconnected");
         if (mNotification != null) {
             mNotification.hide();
             mNotification = null;
@@ -327,6 +337,7 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void onConnectionSynchronized() {
+        getClassInfo();
         super.onConnectionSynchronized();
 
         // Restore mute/deafen state
@@ -347,6 +358,7 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void onConnectionDisconnected(JumbleException e) {
+        Log.getClassInfo("ConnectionState: onDisconnected");
         super.onConnectionDisconnected(e);
         try {
             unregisterReceiver(mTalkReceiver);
@@ -370,6 +382,7 @@ public class PlumbleService extends JumbleService implements
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        getClassInfo();
         Bundle changedExtras = new Bundle();
         boolean requiresReconnect = false;
         switch (key) {
@@ -455,6 +468,7 @@ public class PlumbleService extends JumbleService implements
     }
 
     private void setProximitySensorOn(boolean on) {
+        getClassInfo();
         if(on) {
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
             mProximityLock = pm.newWakeLock(PROXIMITY_SCREEN_OFF_WAKE_LOCK, "plumble_proximity");
@@ -467,6 +481,7 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void onMuteToggled() {
+        getClassInfo();
         IUser user = getSessionUser();
         if (isConnectionEstablished() && user != null) {
             boolean muted = !user.isSelfMuted();
@@ -477,6 +492,7 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void onDeafenToggled() {
+        getClassInfo();
         IUser user = getSessionUser();
         if (isConnectionEstablished() && user != null) {
             setSelfMuteDeafState(!user.isSelfDeafened(), !user.isSelfDeafened());
@@ -485,6 +501,7 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void onOverlayToggled() {
+        getClassInfo();
         if (!mChannelOverlay.isShown()) {
             mChannelOverlay.show();
         } else {
@@ -504,6 +521,7 @@ public class PlumbleService extends JumbleService implements
 
     @Override
     public void cancelReconnect() {
+        getClassInfo();
         if (mReconnectNotification != null) {
             mReconnectNotification.hide();
             mReconnectNotification = null;
@@ -512,6 +530,7 @@ public class PlumbleService extends JumbleService implements
     }
 
     public void setOverlayShown(boolean showOverlay) {
+        getClassInfo();
         if(!mChannelOverlay.isShown()) {
             mChannelOverlay.show();
         } else {
@@ -520,6 +539,7 @@ public class PlumbleService extends JumbleService implements
     }
 
     public boolean isOverlayShown() {
+
         return mChannelOverlay.isShown();
     }
 
@@ -528,6 +548,7 @@ public class PlumbleService extends JumbleService implements
     }
 
     public void markErrorShown() {
+        getClassInfo();
         mErrorShown = true;
         // Dismiss the reconnection prompt if a reconnection isn't in progress.
         if (mReconnectNotification != null && !isReconnecting()) {
@@ -545,6 +566,7 @@ public class PlumbleService extends JumbleService implements
      * Accounts for talk logic if toggle PTT is on.
      */
     public void onTalkKeyDown() {
+        getClassInfo();
         if(isConnectionEstablished()
                 && Settings.ARRAY_INPUT_METHOD_PTT.equals(mSettings.getInputMethod())) {
             if (!mSettings.isPushToTalkToggle() && !isTalking()) {
@@ -558,6 +580,7 @@ public class PlumbleService extends JumbleService implements
      * Accounts for talk logic if toggle PTT is on.
      */
     public void onTalkKeyUp() {
+        getClassInfo();
         if(isConnectionEstablished()
                 && Settings.ARRAY_INPUT_METHOD_PTT.equals(mSettings.getInputMethod())) {
             if (mSettings.isPushToTalkToggle()) {

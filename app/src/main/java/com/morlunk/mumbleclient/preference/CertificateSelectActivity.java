@@ -32,6 +32,8 @@ import com.morlunk.mumbleclient.db.PlumbleSQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 11/01/16.
  */
@@ -40,6 +42,7 @@ public class CertificateSelectActivity extends Activity implements DialogInterfa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
 
         Settings settings = Settings.getInstance(this);
@@ -56,12 +59,14 @@ public class CertificateSelectActivity extends Activity implements DialogInterfa
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        getClassInfo();
         ICertificateItem certificate = mCertificates.get(which);
         certificate.onActivate();
         finish();
     }
 
     private void showCertificateSelectionDialog() {
+        getClassInfo();
         int defaultCertificatePosition = -1;
         for (int i = 0; i < mCertificates.size(); i++) {
             if (mCertificates.get(i).isDefault()) {
@@ -82,6 +87,7 @@ public class CertificateSelectActivity extends Activity implements DialogInterfa
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+
         finish();
     }
 

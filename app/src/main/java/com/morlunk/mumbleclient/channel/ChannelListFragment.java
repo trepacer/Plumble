@@ -53,12 +53,16 @@ import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.db.DatabaseProvider;
 import com.morlunk.mumbleclient.util.JumbleServiceFragment;
+import com.morlunk.mumbleclient.util.Log;
+
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
 
 public class ChannelListFragment extends JumbleServiceFragment implements OnChannelClickListener, OnUserClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private IJumbleObserver mServiceObserver = new JumbleObserver() {
         @Override
         public void onDisconnected(JumbleException e) {
+            Log.getClassInfo("ConnectionState: onDisconnected");
             mChannelView.setAdapter(null);
         }
 
@@ -135,12 +139,14 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onAttach(Activity activity) {
+        getClassInfo();
         super.onAttach(activity);
         try {
             mTargetProvider = (ChatTargetProvider) getParentFragment();
@@ -160,6 +166,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getClassInfo();
         View view = inflater.inflate(R.layout.fragment_channel_list, container, false);
         mChannelView = (RecyclerView) view.findViewById(R.id.channelUsers);
         mChannelView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -169,6 +176,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        getClassInfo();
         super.onActivityCreated(savedInstanceState);
         registerForContextMenu(mChannelView);
         getActivity().registerReceiver(mBluetoothReceiver, new IntentFilter(AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED));
@@ -176,24 +184,27 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onDetach() {
+        getClassInfo();
         getActivity().unregisterReceiver(mBluetoothReceiver);
         super.onDetach();
     }
 
     @Override
     public void onDestroy() {
+        Log.getClassInfo("ConnectionState: onDisconnected");
         super.onDestroy();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         preferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
+//    @Override
     public IJumbleObserver getServiceObserver() {
         return mServiceObserver;
     }
 
     @Override
     public void onServiceBound(IJumbleService service) {
+        getClassInfo();
         try {
             if (mChannelListAdapter == null) {
                 setupChannelList();
@@ -207,6 +218,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        getClassInfo();
         super.onPrepareOptionsMenu(menu);
 
         MenuItem muteItem = menu.findItem(R.id.menu_mute_button);
@@ -230,6 +242,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getClassInfo();
         inflater.inflate(R.menu.fragment_channel_list, menu);
 
         MenuItem searchItem = menu.findItem(R.id.menu_search);
@@ -268,6 +281,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        getClassInfo();
 
         switch (item.getItemId()) {
             case R.id.menu_mute_button: {
@@ -306,6 +320,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
     }
 
     private void setupChannelList() throws RemoteException {
+        getClassInfo();
         mChannelListAdapter = new ChannelListAdapter(getActivity(), getService(),
                 mDatabaseProvider.getDatabase(), getChildFragmentManager(),
                 isShowingPinnedChannels(), mSettings.shouldShowUserCount());
@@ -319,6 +334,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 	 * Scrolls to the passed channel.
 	 */
 	public void scrollToChannel(int channelId) {
+        getClassInfo();
 		int channelPosition = mChannelListAdapter.getChannelPosition(channelId);
         mChannelView.smoothScrollToPosition(channelPosition);
     }
@@ -326,15 +342,18 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 	 * Scrolls to the passed user.
 	 */
 	public void scrollToUser(int userId) {
+        getClassInfo();
 		int userPosition = mChannelListAdapter.getUserPosition(userId);
 		mChannelView.smoothScrollToPosition(userPosition);
 	}
 
     private boolean isShowingPinnedChannels() {
+
         return getArguments().getBoolean("pinned");
     }
     @Override
     public void onChannelClick(IChannel channel) {
+        getClassInfo();
         if (mTargetProvider.getChatTarget() != null &&
                 channel.equals(mTargetProvider.getChatTarget().getChannel()) &&
                 mActionMode != null) {
@@ -354,6 +373,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onUserClick(IUser user) {
+        getClassInfo();
         if (mTargetProvider.getChatTarget() != null &&
                 user.equals(mTargetProvider.getChatTarget().getUser()) &&
                 mActionMode != null) {
@@ -373,6 +393,7 @@ public class ChannelListFragment extends JumbleServiceFragment implements OnChan
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        getClassInfo();
         if (Settings.PREF_SHOW_USER_COUNT.equals(key) && mChannelListAdapter != null) {
             mChannelListAdapter.setShowChannelUserCount(mSettings.shouldShowUserCount());
         }

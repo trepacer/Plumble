@@ -28,6 +28,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Pings the requested server and returns a ServerInfoResponse.
  * Will return a 'dummy' ServerInfoResponse in the case of failure.
@@ -40,6 +42,7 @@ public class ServerInfoTask extends AsyncTask<Server, Void, ServerInfoResponse> 
 	
 	@Override
 	protected ServerInfoResponse doInBackground(Server... params) {
+		getClassInfo();
 		server = params[0];
 		try {
 			InetAddress host = InetAddress.getByName(server.getHost());

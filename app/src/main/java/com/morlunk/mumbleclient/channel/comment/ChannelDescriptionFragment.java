@@ -23,6 +23,7 @@ import com.morlunk.jumble.IJumbleService;
 import com.morlunk.jumble.model.Channel;
 import com.morlunk.jumble.model.IChannel;
 import com.morlunk.jumble.util.JumbleObserver;
+import com.morlunk.mumbleclient.util.Log;
 
 /**
  * Created by andrew on 03/03/14.
@@ -31,6 +32,7 @@ public class ChannelDescriptionFragment extends AbstractCommentFragment {
 
     @Override
     public void requestComment(final IJumbleService service) {
+        Log.getClassInfo();
         service.registerObserver(new JumbleObserver() {
             @Override
             public void onChannelStateUpdated(IChannel channel) {

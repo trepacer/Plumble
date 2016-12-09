@@ -33,6 +33,8 @@ import com.morlunk.jumble.model.TalkState;
 import com.morlunk.jumble.model.User;
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Simple adapter to display the users in a single channel.
  * Created by andrew on 24/11/13.
@@ -67,6 +69,7 @@ public class ChannelAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        getClassInfo();
         View v = convertView;
         if(v == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(mContext);

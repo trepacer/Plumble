@@ -39,6 +39,8 @@ import com.morlunk.mumbleclient.R;
 
 import java.util.Objects;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 30/11/15.
  */
@@ -56,6 +58,7 @@ public class TalkingIndicatorView extends View implements ValueAnimator.Animator
 
     public TalkingIndicatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        getClassInfo();
         TypedArray style = context.obtainStyledAttributes(attrs, new int[] {
                 R.attr.arcColor,
                 R.attr.arcWidth,
@@ -93,6 +96,7 @@ public class TalkingIndicatorView extends View implements ValueAnimator.Animator
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        getClassInfo();
         super.onSizeChanged(w, h, oldw, oldh);
         mBounds = new RectF(0, 0, w, h);
         mBounds.inset(mArcWidth / 2, mArcWidth / 2);

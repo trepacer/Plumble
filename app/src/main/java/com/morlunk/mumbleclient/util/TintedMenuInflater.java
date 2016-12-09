@@ -27,6 +27,8 @@ import android.view.MenuItem;
 
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * A wrapper around a {@link android.view.MenuInflater} that tints menu items to the control color
  * of the action bar's theme.
@@ -41,6 +43,7 @@ public class TintedMenuInflater {
     }
 
     public TintedMenuInflater(Context context, MenuInflater inflater) {
+        getClassInfo();
         mInflater = inflater;
         TypedArray actionBarThemeArray =
                 context.obtainStyledAttributes(new int[]{R.attr.actionBarStyle});
@@ -59,6 +62,7 @@ public class TintedMenuInflater {
     }
 
     public void inflate(int menuRes, Menu menu) {
+        getClassInfo();
         mInflater.inflate(menuRes, menu);
         for (int x = 0; x < menu.size(); x++) {
             MenuItem item = menu.getItem(x);
@@ -67,6 +71,7 @@ public class TintedMenuInflater {
     }
 
     public void tintItem(MenuItem item) {
+        getClassInfo();
         if (item.getIcon() != null) {
             Drawable icon = item.getIcon().mutate();
             icon.setColorFilter(mTintColour, PorterDuff.Mode.MULTIPLY);

@@ -26,6 +26,8 @@ import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.db.DatabaseCertificate;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 12/01/16.
  */
@@ -33,6 +35,7 @@ public class CertificateGenerateActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
 
         PlumbleCertificateGenerateTask task = new PlumbleCertificateGenerateTask(this) {
@@ -53,6 +56,7 @@ public class CertificateGenerateActivity extends Activity {
     }
 
     private void showCompletionDialog(DatabaseCertificate result) {
+        getClassInfo();
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setMessage(getString(R.string.generateCertSuccess, result.getName()));
         adb.setPositiveButton(android.R.string.ok, null);

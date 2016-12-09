@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
 * Created by andrew on 07/05/14.
 */
@@ -40,11 +42,13 @@ public class PublicServerAdapter extends ServerAdapter<PublicServer> {
 
     public PublicServerAdapter(Context context, List<PublicServer> servers, PublicServerAdapterMenuListener listener) {
         super(context, R.layout.public_server_list_row, servers);
+        getClassInfo();
         mUnfilteredServers = new ArrayList<PublicServer>(servers);
         mListener = listener;
     }
 
     public void filter(String queryName, String queryCountry) {
+        getClassInfo();
         clear();
 
         for(PublicServer server : mUnfilteredServers) {
@@ -58,6 +62,7 @@ public class PublicServerAdapter extends ServerAdapter<PublicServer> {
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+        getClassInfo();
         View view = super.getView(position, v, parent);
 
         final PublicServer server = getItem(position);
@@ -75,6 +80,7 @@ public class PublicServerAdapter extends ServerAdapter<PublicServer> {
 
     @Override
     public boolean onPopupItemClick(Server server, MenuItem menuItem) {
+        getClassInfo();
         switch (menuItem.getItemId()) {
             case R.id.menu_server_favourite:
                 mListener.favouriteServer(server);

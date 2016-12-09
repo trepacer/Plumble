@@ -34,6 +34,8 @@ import com.morlunk.jumble.model.Server;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class ServerEditFragment extends DialogFragment {
     private static final String ARGUMENT_SERVER = "server";
     private static final String ARGUMENT_ACTION = "action";
@@ -58,6 +60,7 @@ public class ServerEditFragment extends DialogFragment {
     public static DialogFragment createServerEditDialog(Context context, Server server,
                                                   Action action,
                                                   boolean ignoreTitle) {
+        getClassInfo();
         Bundle args = new Bundle();
         args.putParcelable(ARGUMENT_SERVER, server);
         args.putInt(ARGUMENT_ACTION, action.ordinal());
@@ -67,12 +70,14 @@ public class ServerEditFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
     }
 
     @Override
 	public void onAttach(Activity activity) {
+        getClassInfo();
 		super.onAttach(activity);
         try {
             mListener = (ServerEditListener) activity;
@@ -83,6 +88,7 @@ public class ServerEditFragment extends DialogFragment {
 
     @Override
     public void onStart() {
+        getClassInfo();
         super.onStart();
         // Override positive button to not automatically dismiss on press.
         // We can't accomplish this with AlertDialog.Builder.
@@ -100,6 +106,7 @@ public class ServerEditFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        getClassInfo();
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
         Settings settings = Settings.getInstance(getActivity());
 
@@ -154,6 +161,7 @@ public class ServerEditFragment extends DialogFragment {
     }
 
 	public Server createServer() {
+        getClassInfo();
         String name = (mNameEdit).getText().toString().trim();
         String host = (mHostEdit).getText().toString().trim();
 
@@ -187,6 +195,7 @@ public class ServerEditFragment extends DialogFragment {
      * @return true if the inputted values are valid, false otherwise.
      */
     public boolean validate() {
+        getClassInfo();
         if (mHostEdit.getText().length() == 0) {
             mHostEdit.setError(getString(R.string.invalid_host));
             return false;

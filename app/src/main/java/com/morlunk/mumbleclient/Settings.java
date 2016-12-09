@@ -43,6 +43,8 @@ import java.security.cert.CertificateException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Singleton settings class for universal access to the app's preferences.
  * @author morlunk
@@ -177,6 +179,7 @@ public class Settings {
     }
 
     private Settings(Context ctx) {
+        getClassInfo();
         preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         // TODO(acomminos): Settings migration infra.
@@ -225,6 +228,7 @@ public class Settings {
     }
 
     public String getInputMethod() {
+        getClassInfo();
 //        String method = preferences.getString(PREF_INPUT_METHOD, ARRAY_INPUT_METHOD_VOICE);
 //        if(!ARRAY_INPUT_METHODS.contains(method)) {
 //            // Set default method for users who used to use handset mode before removal.
@@ -240,6 +244,7 @@ public class Settings {
      * @return An input method value used to instantiate a Jumble service.
      */
     public int getJumbleInputMethod() {
+        getClassInfo();
         String inputMethod = getInputMethod();
         if (ARRAY_INPUT_METHOD_VOICE.equals(inputMethod)) {
             return Constants.TRANSMIT_VOICE_ACTIVITY;
@@ -252,6 +257,7 @@ public class Settings {
     }
 
     public void setInputMethod(String inputMethod) {
+        getClassInfo();
         if(ARRAY_INPUT_METHOD_VOICE.equals(inputMethod) ||
                 ARRAY_INPUT_METHOD_PTT.equals(inputMethod) ||
                 ARRAY_INPUT_METHOD_CONTINUOUS.equals(inputMethod)) {
@@ -262,26 +268,32 @@ public class Settings {
     }
 
     public int getInputSampleRate() {
+        getClassInfo();
         return Integer.parseInt(preferences.getString(Settings.PREF_INPUT_RATE, DEFAULT_RATE));
     }
 
     public int getInputQuality() {
+        getClassInfo();
         return preferences.getInt(Settings.PREF_INPUT_QUALITY, DEFAULT_INPUT_QUALITY);
     }
 
     public float getAmplitudeBoostMultiplier() {
+        getClassInfo();
         return (float)preferences.getInt(Settings.PREF_AMPLITUDE_BOOST, DEFAULT_AMPLITUDE_BOOST)/100;
     }
 
     public float getDetectionThreshold() {
+        getClassInfo();
         return (float)preferences.getInt(PREF_THRESHOLD, DEFAULT_THRESHOLD)/100;
     }
 
     public int getPushToTalkKey() {
+        getClassInfo();
         return preferences.getInt(PREF_PUSH_KEY, DEFAULT_PUSH_KEY);
     }
 
     public String getHotCorner() {
+        getClassInfo();
         return preferences.getString(PREF_HOT_CORNER_KEY, DEFAULT_HOT_CORNER);
     }
 
@@ -290,6 +302,7 @@ public class Settings {
      * @return true if a hot corner should be shown.
      */
     public boolean isHotCornerEnabled() {
+        getClassInfo();
         return !ARRAY_HOT_CORNER_NONE.equals(preferences.getString(PREF_HOT_CORNER_KEY, DEFAULT_HOT_CORNER));
     }
 
@@ -298,6 +311,7 @@ public class Settings {
      * @return A {@link android.view.Gravity} value, or 0 if disabled.
      */
     public int getHotCornerGravity() {
+        getClassInfo();
         String hc = getHotCorner();
         if(ARRAY_HOT_CORNER_BOTTOM_LEFT.equals(hc)) {
             return Gravity.LEFT | Gravity.BOTTOM;
@@ -315,6 +329,7 @@ public class Settings {
      * @return the resource ID of the user-defined theme.
      */
     public int getTheme() {
+        getClassInfo();
         String theme = preferences.getString(PREF_THEME, ARRAY_THEME_LIGHT);
         if(ARRAY_THEME_LIGHT.equals(theme))
             return R.style.Theme_Plumble;
@@ -329,6 +344,7 @@ public class Settings {
 
     /* @return the height of PTT button */
     public int getPTTButtonHeight() {
+        getClassInfo();
         return preferences.getInt(Settings.PREF_PTT_BUTTON_HEIGHT, DEFAULT_PTT_BUTTON_HEIGHT);
     }
 
@@ -338,6 +354,7 @@ public class Settings {
      * @return The default certificate's ID, or a negative integer if not set.
      */
     public long getDefaultCertificate() {
+
         return preferences.getLong(PREF_CERT_ID, -1);
     }
 
@@ -398,6 +415,7 @@ public class Settings {
     }
 
     public void setMutedAndDeafened(boolean muted, boolean deafened) {
+        getClassInfo();
         Editor editor = preferences.edit();
         editor.putBoolean(PREF_MUTED, muted || deafened);
         editor.putBoolean(PREF_DEAFENED, deafened);

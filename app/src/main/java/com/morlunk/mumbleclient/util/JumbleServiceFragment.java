@@ -60,6 +60,7 @@ public abstract class JumbleServiceFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        Log.getClassInfo("ConnectionState: onDisconnected");
         mServiceProvider.removeServiceFragment(this);
         if(mServiceProvider.getService() != null && mBound)
             onServiceDetached(mServiceProvider.getService());

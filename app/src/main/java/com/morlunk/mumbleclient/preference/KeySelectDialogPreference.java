@@ -35,6 +35,8 @@ import android.widget.TextView;
 
 import com.morlunk.mumbleclient.R;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class KeySelectDialogPreference extends DialogPreference implements OnKeyListener {
 	
 	//private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
@@ -64,6 +66,7 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 	
 	@Override
 	protected View onCreateDialogView() {
+		getClassInfo();
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		LinearLayout layout = new LinearLayout(getContext());
 	    layout.setOrientation(LinearLayout.VERTICAL);
@@ -93,6 +96,7 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 	@Override
 	protected void onSetInitialValue(boolean restorePersistedValue,
 			Object defaultValue) {
+		getClassInfo();
 		super.onSetInitialValue(restorePersistedValue, defaultValue);
 		if(restorePersistedValue)  {
 			keyCode = getPersistedInt(0);
@@ -113,6 +117,7 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 	@TargetApi(12)
 	@Override
 	protected void onBindDialogView(View view) {
+		getClassInfo();
 		super.onBindDialogView(view);
 		if(keyCode == 0) {
 			valueTextView.setText("No Key");
@@ -128,6 +133,7 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 	@TargetApi(12)
 	@Override
 	public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+		getClassInfo();
 		if(keyCode != KeyEvent.KEYCODE_BACK) {
 			this.keyCode = keyCode;
 			

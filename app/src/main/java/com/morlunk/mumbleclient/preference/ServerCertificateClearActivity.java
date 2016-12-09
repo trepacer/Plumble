@@ -24,12 +24,15 @@ import android.widget.Toast;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.util.PlumbleTrustStore;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 13/01/16.
  */
 public class ServerCertificateClearActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         PlumbleTrustStore.clearTrustStore(this);
         Toast.makeText(this, R.string.trust_cleared, Toast.LENGTH_LONG).show();

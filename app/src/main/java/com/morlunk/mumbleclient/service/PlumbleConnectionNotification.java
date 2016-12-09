@@ -33,6 +33,8 @@ import com.morlunk.mumbleclient.app.PlumbleActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Wrapper to create Plumble notifications.
  * Created by andrew on 08/08/14.
@@ -70,6 +72,7 @@ public class PlumbleConnectionNotification {
      */
     public static PlumbleConnectionNotification showForeground(Service service, String ticker, String contentText,
                                                      OnActionListener listener) {
+        getClassInfo();
         PlumbleConnectionNotification notification = new PlumbleConnectionNotification(service, ticker, contentText, listener);
         notification.show();
         return notification;
@@ -77,6 +80,8 @@ public class PlumbleConnectionNotification {
 
     private PlumbleConnectionNotification(Service service, String ticker, String contentText,
                                           OnActionListener listener) {
+        getClassInfo();
+        //7-3-9-2.通知栏初始化
         mService = service;
         mListener = listener;
         mCustomTicker = ticker;
@@ -100,6 +105,8 @@ public class PlumbleConnectionNotification {
      * Shows the notification and registers the notification action button receiver.
      */
     public void show() {
+        getClassInfo();
+        //7-3-9-3.显示通知栏
         createNotification();
 
         IntentFilter filter = new IntentFilter();
@@ -118,6 +125,7 @@ public class PlumbleConnectionNotification {
      * Hides the notification and unregisters the action receiver.
      */
     public void hide() {
+        getClassInfo();
         try {
             mService.unregisterReceiver(mNotificationReceiver);
         } catch (IllegalArgumentException e) {
@@ -131,35 +139,15 @@ public class PlumbleConnectionNotification {
      * Called to update/create the service's foreground Plumble notification.
      */
     private Notification createNotification() {
+        getClassInfo();
+        //7-3-9-4.创建通知栏
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mService);
         builder.setContentTitle(mService.getString(R.string.notification_ptt));
         builder.setContentText(mCustomContentText);
         builder.setSmallIcon(R.drawable.ic_stat_notify);
-        builder.setPriority(NotificationCompat.PRIORITY_MIN);
+//        builder.setPriority(NotificationCompat.PRIORITY_MIN);
         builder.setOngoing(true);
-
-        //屏蔽通知子菜单
-//        if (mActionsShown) {
-//            // Add notification triggers
-//            Intent muteIntent = new Intent(BROADCAST_MUTE);
-//            Intent deafenIntent = new Intent(BROADCAST_DEAFEN);
-//            Intent overlayIntent = new Intent(BROADCAST_OVERLAY);
-//
-//            builder.addAction(R.drawable.ic_action_microphone,
-//                    mService.getString(R.string.mute), PendingIntent.getBroadcast(mService, 1,
-//                            muteIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-//            builder.addAction(R.drawable.ic_action_audio,
-//                    mService.getString(R.string.deafen), PendingIntent.getBroadcast(mService, 1,
-//                            deafenIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-//            builder.addAction(R.drawable.ic_action_channels,
-//                    mService.getString(R.string.overlay), PendingIntent.getBroadcast(mService, 2,
-//                            overlayIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-//        }
-
-//        Intent channelListIntent = new Intent(mService, PlumbleActivity.class);
-//        channelListIntent.putExtra(PlumbleActivity.EXTRA_DRAWER_FRAGMENT, DrawerAdapter.ITEM_SERVER);
-        // FLAG_CANCEL_CURRENT ensures that the extra always gets sent.
-
+        builder.setOnlyAlertOnce(true);
         //10085467 发送小窗口广播
         Intent overlayIntent = new Intent(BROADCAST_OVERLAY);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mService,2,overlayIntent, PendingIntent.FLAG_CANCEL_CURRENT);

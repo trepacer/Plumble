@@ -30,6 +30,8 @@ import com.morlunk.mumbleclient.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDatabase {
     public static final String DATABASE_NAME = "mumble.db";
 
@@ -125,6 +127,8 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        getClassInfo();
+        //9-4-2.初始化
         db.execSQL(TABLE_SERVER_CREATE_SQL);
         db.execSQL(TABLE_FAVOURITES_CREATE_SQL);
         db.execSQL(TABLE_TOKENS_CREATE_SQL);
@@ -172,6 +176,8 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public List<Server> getServers() {
+        getClassInfo();
+        //9-4-1.查询服务器列表
         Cursor c = getReadableDatabase().query(
                 TABLE_SERVER,
                 new String[]{SERVER_ID, SERVER_NAME, SERVER_HOST,
@@ -203,6 +209,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void addServer(Server server) {
+        getClassInfo();
         ContentValues values = new ContentValues();
         values.put(SERVER_NAME, server.getName());
         values.put(SERVER_HOST, server.getHost());
@@ -215,6 +222,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void updateServer(Server server) {
+        getClassInfo();
         ContentValues values = new ContentValues();
         values.put(SERVER_NAME, server.getName());
         values.put(SERVER_HOST, server.getHost());
@@ -230,6 +238,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void removeServer(Server server) {
+        getClassInfo();
         getWritableDatabase().delete(TABLE_SERVER, SERVER_ID + "=?",
                 new String[] { String.valueOf(server.getId()) });
         // Clean up server-specific entries
@@ -244,6 +253,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
     }
 
     public List<Integer> getPinnedChannels(long serverId) {
+        getClassInfo();
 
         final Cursor c = getReadableDatabase().query(
                 TABLE_FAVOURITES,
@@ -276,6 +286,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public boolean isChannelPinned(long serverId, int channelId) {
+        getClassInfo();
         Cursor c = getReadableDatabase().query(
                 TABLE_FAVOURITES,
                 new String[]{FAVOURITES_CHANNEL},
@@ -295,6 +306,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public List<String> getAccessTokens(long serverId) {
+        getClassInfo();
         Cursor cursor = getReadableDatabase().query(TABLE_TOKENS, new String[] { TOKENS_VALUE }, TOKENS_SERVER+"=?", new String[] { String.valueOf(serverId) }, null, null, null);
         cursor.moveToFirst();
         List<String> tokens = new ArrayList<String>();
@@ -308,6 +320,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void addAccessToken(long serverId, String token) {
+        getClassInfo();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TOKENS_SERVER, serverId);
         contentValues.put(TOKENS_VALUE, token);
@@ -316,11 +329,13 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void removeAccessToken(long serverId, String token) {
+        getClassInfo();
         getWritableDatabase().delete(TABLE_TOKENS, TOKENS_SERVER+"=? AND "+TOKENS_VALUE+"=?", new String[] {String.valueOf(serverId), token });
     }
 
     @Override
     public List<Integer> getLocalMutedUsers(long serverId) {
+        getClassInfo();
         Cursor cursor = getReadableDatabase().query(TABLE_LOCAL_MUTE,
                 new String[] { LOCAL_MUTE_USER },
                 LOCAL_MUTE_SERVER + "=?",
@@ -337,6 +352,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void addLocalMutedUser(long serverId, int userId) {
+        getClassInfo();
         ContentValues values = new ContentValues();
         values.put(LOCAL_MUTE_SERVER, serverId);
         values.put(LOCAL_MUTE_USER, userId);
@@ -345,6 +361,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void removeLocalMutedUser(long serverId, int userId) {
+        getClassInfo();
         getWritableDatabase().delete(TABLE_LOCAL_MUTE,
                 LOCAL_MUTE_SERVER + "=? AND " + LOCAL_MUTE_USER + "=?",
                 new String[] { String.valueOf(serverId), String.valueOf(userId) });
@@ -352,6 +369,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public List<Integer> getLocalIgnoredUsers(long serverId) {
+        getClassInfo();
         Cursor cursor = getReadableDatabase().query(TABLE_LOCAL_IGNORE,
                 new String[] { LOCAL_IGNORE_USER },
                 LOCAL_IGNORE_SERVER + "=?",
@@ -368,6 +386,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void addLocalIgnoredUser(long serverId, int userId) {
+        getClassInfo();
         ContentValues values = new ContentValues();
         values.put(LOCAL_IGNORE_SERVER, serverId);
         values.put(LOCAL_IGNORE_USER, userId);
@@ -376,6 +395,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void removeLocalIgnoredUser(long serverId, int userId) {
+        getClassInfo();
         getWritableDatabase().delete(TABLE_LOCAL_IGNORE,
                 LOCAL_IGNORE_SERVER + "=? AND " + LOCAL_IGNORE_USER + "=?",
                 new String[] { String.valueOf(serverId), String.valueOf(userId) });
@@ -383,6 +403,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public DatabaseCertificate addCertificate(String name, byte[] certificate) {
+        getClassInfo();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CERTIFICATES_NAME, name);
         values.put(COLUMN_CERTIFICATES_DATA, certificate);
@@ -392,6 +413,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public List<DatabaseCertificate> getCertificates() {
+        getClassInfo();
         Cursor cursor = getReadableDatabase().query(TABLE_CERTIFICATES,
                 new String[] { COLUMN_CERTIFICATES_ID, COLUMN_CERTIFICATES_NAME },
                 null, null, null, null, null);
@@ -407,6 +429,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public byte[] getCertificateData(long id) {
+        getClassInfo();
         Cursor cursor = getReadableDatabase().query(TABLE_CERTIFICATES,
                 new String[] { COLUMN_CERTIFICATES_DATA },
                 COLUMN_CERTIFICATES_ID + "=?",
@@ -420,6 +443,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void removeCertificate(long id) {
+        getClassInfo();
         getWritableDatabase().delete(TABLE_CERTIFICATES,
                 COLUMN_CERTIFICATES_ID + "=?",
                 new String[] { String.valueOf(id) });
@@ -427,6 +451,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public boolean isCommentSeen(String hash, byte[] commentHash) {
+        getClassInfo();
         Cursor cursor = getReadableDatabase().query(TABLE_COMMENTS,
                 new String[]{COMMENTS_WHO, COMMENTS_COMMENT, COMMENTS_SEEN}, COMMENTS_WHO + "=? AND " + COMMENTS_COMMENT + "=?",
                 new String[]{hash, new String(commentHash)},
@@ -438,6 +463,7 @@ public class PlumbleSQLiteDatabase extends SQLiteOpenHelper implements PlumbleDa
 
     @Override
     public void markCommentSeen(String hash, byte[] commentHash) {
+        getClassInfo();
         ContentValues values = new ContentValues();
         values.put(COMMENTS_WHO, hash);
         values.put(COMMENTS_COMMENT, commentHash);

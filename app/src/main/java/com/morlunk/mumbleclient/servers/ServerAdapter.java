@@ -37,6 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * Created by andrew on 05/05/14.
  */
@@ -59,6 +61,7 @@ public abstract class ServerAdapter<E extends Server> extends ArrayAdapter<E> {
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+        getClassInfo();
         View view = v;
 
         if(v == null) {
@@ -134,6 +137,7 @@ public abstract class ServerAdapter<E extends Server> extends ArrayAdapter<E> {
     }
 
     private void onServerOptionsClick(final Server server, View optionsButton) {
+        getClassInfo();
         PopupMenu popupMenu = new PopupMenu(getContext(), optionsButton);
         popupMenu.inflate(getPopupMenuResource());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

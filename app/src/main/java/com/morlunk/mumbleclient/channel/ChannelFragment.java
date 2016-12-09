@@ -56,9 +56,12 @@ import com.morlunk.jumble.util.VoiceTargetMode;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.util.JumbleServiceFragment;
+import com.morlunk.mumbleclient.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
 
 /**
  * Class to encapsulate both a ChannelListFragment and ChannelChatFragment.
@@ -116,12 +119,14 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getClassInfo();
         View view = inflater.inflate(R.layout.fragment_channel, container, false);
         mViewPager = (ViewPager) view.findViewById(R.id.channel_view_pager);
         mTabStrip = (PagerTabStrip) view.findViewById(R.id.channel_tab_strip);
@@ -176,6 +181,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        getClassInfo();
         super.onActivityCreated(savedInstanceState);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -200,12 +206,14 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getClassInfo();
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.channel_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        getClassInfo();
         Settings settings = Settings.getInstance(getActivity());
         switch (item.getItemId()) {
             case R.id.menu_input_voice:
@@ -223,6 +231,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void onPause() {
+        getClassInfo();
         super.onPause();
         if (getService() != null && !Settings.getInstance(getActivity()).isPushToTalkToggle()) {
             // XXX: This ensures that push to talk is disabled when we pause.
@@ -233,6 +242,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void onDestroy() {
+        Log.getClassInfo("ConnectionState: onDisconnected");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         preferences.unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
@@ -240,17 +250,20 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public IJumbleObserver getServiceObserver() {
+
         return mObserver;
     }
 
     @Override
     public void onServiceBound(IJumbleService service) {
+        getClassInfo();
         super.onServiceBound(service);
         configureTargetPanel();
         configureInput();
     }
 
     private void configureTargetPanel() {
+        getClassInfo();
         VoiceTargetMode mode = getService().getVoiceTargetMode();
         if (mode == VoiceTargetMode.WHISPER) {
             WhisperTarget target = getService().getWhisperTarget();
@@ -265,6 +278,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
      * @return true if the channel fragment is set to display only the user's pinned channels.
      */
     private boolean isShowingPinnedChannels() {
+        getClassInfo();
         return getArguments() != null &&
                 getArguments().getBoolean("pinned");
     }
@@ -273,6 +287,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
      * Configures the fragment in accordance with the user's interface preferences.
      */
     private void configureInput() {
+        getClassInfo();
         Settings settings = Settings.getInstance(getActivity());
 
         ViewGroup.LayoutParams params = mTalkView.getLayoutParams();
@@ -292,6 +307,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
     }
 
     private void setTalkButtonHidden(final boolean hidden) {
+        getClassInfo();
         if (hidden ^ mTalkButtonHidden) {
             Settings settings = Settings.getInstance(getActivity());
             mTalkView.animate()
@@ -324,6 +340,7 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        getClassInfo();
         if(Settings.PREF_INPUT_METHOD.equals(key)
                 || Settings.PREF_PUSH_BUTTON_HIDE_KEY.equals(key)
                 || Settings.PREF_PTT_BUTTON_HEIGHT.equals(key))
@@ -332,11 +349,13 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public ChatTarget getChatTarget() {
+
         return mChatTarget;
     }
 
     @Override
     public void setChatTarget(ChatTarget target) {
+        getClassInfo();
         mChatTarget = target;
         for(OnChatTargetSelectedListener listener : mChatTargetListeners)
             listener.onChatTargetSelected(target);
@@ -344,15 +363,18 @@ public class ChannelFragment extends JumbleServiceFragment implements SharedPref
 
     @Override
     public void registerChatTargetListener(OnChatTargetSelectedListener listener) {
+        getClassInfo();
         mChatTargetListeners.add(listener);
     }
 
     @Override
     public void unregisterChatTargetListener(OnChatTargetSelectedListener listener) {
+        getClassInfo();
         mChatTargetListeners.remove(listener);
     }
 
     private class ChannelFragmentPagerAdapter extends FragmentPagerAdapter {
+
 
         public ChannelFragmentPagerAdapter(FragmentManager fm) {
             super(fm);

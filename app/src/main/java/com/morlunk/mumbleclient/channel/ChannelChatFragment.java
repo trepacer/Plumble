@@ -66,6 +66,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class ChannelChatFragment extends JumbleServiceFragment implements ChatTargetProvider.OnChatTargetSelectedListener {
     private static final Pattern LINK_PATTERN = Pattern.compile("(https?://\\S+)");
 
@@ -110,12 +112,14 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getClassInfo();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onAttach(Activity activity) {
+        getClassInfo();
         super.onAttach(activity);
         try {
             mTargetProvider = (ChatTargetProvider) getParentFragment();
@@ -126,12 +130,14 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
 
     @Override
     public void onResume() {
+        getClassInfo();
         super.onResume();
         mTargetProvider.registerChatTargetListener(this);
     }
 
     @Override
     public void onPause() {
+        getClassInfo();
         super.onPause();
         mTargetProvider.unregisterChatTargetListener(this);
     }
@@ -139,6 +145,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+        getClassInfo();
 		View view = inflater.inflate(R.layout.fragment_chat, container, false);
         mChatList = (ListView) view.findViewById(R.id.chat_list);
 		mChatTextEdit = (EditText) view.findViewById(R.id.chatTextEdit);
@@ -209,6 +216,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
      * @param scroll Whether to scroll to the bottom after adding the message.
      */
     public void addChatMessage(IChatMessage message, boolean scroll) {
+        getClassInfo();
 		if(mChatAdapter == null) return;
 
         mChatAdapter.add(message);
@@ -230,6 +238,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
      * @throws RemoteException If the service failed to send the message.
      */
 	private void sendMessage() throws RemoteException {
+        getClassInfo();
         if(mChatTextEdit.length() == 0) return;
         String message = mChatTextEdit.getText().toString();
         String formattedMessage = markupOutgoingMessage(message);
@@ -251,6 +260,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
      * @return HTML data.
      */
     private String markupOutgoingMessage(String message) {
+        getClassInfo();
         String formattedBody = message;
         Matcher matcher = LINK_PATTERN.matcher(formattedBody);
         formattedBody = matcher.replaceAll("<a href=\"$1\">$1</a>")
@@ -267,6 +277,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
 	 * Updates hint displaying chat target.
 	 */
 	public void updateChatTargetText(ChatTargetProvider.ChatTarget target) {
+        getClassInfo();
         if(getService() == null) return;
 
         String hint = null;
@@ -284,6 +295,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
 
     @Override
     public void onServiceBound(IJumbleService service) {
+        getClassInfo();
         mChatAdapter = new ChannelChatAdapter(getActivity(), service, getService().getMessageLog());
         mChatList.setAdapter(mChatAdapter);
         mChatList.post(new Runnable() {
@@ -318,6 +330,7 @@ public class ChannelChatFragment extends JumbleServiceFragment implements ChatTa
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            getClassInfo();
             View v = convertView;
             if(v == null) {
                 v = LayoutInflater.from(getContext()).inflate(R.layout.list_chat_item, parent, false);

@@ -44,6 +44,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 public class ChannelSearchProvider extends ContentProvider {
 	
 	public static final String INTENT_DATA_CHANNEL = "channel";
@@ -93,8 +95,8 @@ public class ChannelSearchProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {	
-		
+			String[] selectionArgs, String sortOrder) {
+        getClassInfo();
 		// Try to connect to the service. Wait for conn to establish.
 		if(mService == null) {
 			Intent serviceIntent = new Intent(getContext(), PlumbleService.class);

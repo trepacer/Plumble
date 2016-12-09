@@ -34,6 +34,8 @@ import com.morlunk.mumbleclient.app.PlumbleActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.morlunk.mumbleclient.util.Log.getClassInfo;
+
 /**
  * A notification indicating that new messages have been received.
  * Intended to augment the existing {@link PlumbleConnectionNotification} by providing a higher
@@ -58,6 +60,7 @@ public class PlumbleMessageNotification {
      * @param message The message to notify the user about.
      */
     public void show(IMessage message) {
+        getClassInfo();
         mUnreadMessages.add(message);
 
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
@@ -95,6 +98,7 @@ public class PlumbleMessageNotification {
      * Dismisses the unread messages notification, marking all messages read.
      */
     public void dismiss() {
+        getClassInfo();
         mUnreadMessages.clear();
         final NotificationManagerCompat manager = NotificationManagerCompat.from(mContext);
         manager.cancel(NOTIFICATION_ID);
